@@ -60,26 +60,26 @@
           <form method="post">
             {% csrf_token %}
             <div class="mb-4">
-              <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Başlık</label>
+              <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Başlık</label>
               <input type="text" id="title" name="title"
                      value="{{ poll.title }}"
-                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500 dark:shadow-sm-light"
+                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
                      placeholder="Başlık" required>
             </div>
             <div class="mb-4">
               <label for="description"
-                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>
+                     class="block mb-2 text-sm font-medium text-gray-900">Açıklama</label>
               <textarea type="text" id="description"
                         name="description"
-                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500 dark:shadow-sm-light"
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
                         placeholder="Açıklama">{{ poll.description }}</textarea>
             </div>
             <div class="mb-4">
               <label for="tags"
-                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etiketler</label>
+                     class="block mb-2 text-sm font-medium text-gray-900">Etiketler</label>
               <textarea id="tags"
                         name="tags"
-                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500 dark:shadow-sm-light"
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
                         placeholder="Etiketler">{{ poll.tags }}</textarea>
               <span
                 class="text-xs text-gray-500">*Virgül ile ayırarak yazınız.</span>
@@ -91,13 +91,13 @@
                   <input type="checkbox" value="on" name="is_active" class="sr-only peer" {% if poll.is_active %}
                          checked {% endif %}>
                   <div
-                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600"></div>
-                  <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Anket aktif mi ?</span>
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                  <span class="ml-3 text-sm font-medium text-gray-900">Anket aktif mi ?</span>
                 </label>
               </div>
             </div>
             <button type="submit"
-                    class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
+                    class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
               Anketi Kaydet
             </button>
           </form>
