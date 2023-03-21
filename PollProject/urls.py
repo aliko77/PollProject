@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
     path("", Main.as_view(), name="home"),
-    path("poll/my/", include("apps.poll.urls")),
+    path("poll/", include("apps.poll.urls")),
     path("account/", include("apps.account.urls"))
 ]
 
