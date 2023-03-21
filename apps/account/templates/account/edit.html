@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <section id="accountEdit" class="bg-gradient-to-b from-orange-600 to-white">
+    <div>
+      <div class="grid gap-4 grid-cols-3 p-4">
+        <div class="col-span-full">
+          <h1 class="font-semibold text-white text-xl">Kullanıcı Ayarları</h1>
+        </div>
+        <div class="col-span-full md:col-auto">
+          <div class="p-4 bg-orange-500 rounded shadow">
+            <div class="flex sm:block space-x-2 sm:space-x-0">
+              <img src="{{ MEDIA_URL }}{{ user.profile.image.url }}" alt="profile-picture"
+                   class="w-28 rounded-full">
+              <div class="flex flex-col justify-between space-y-1 sm:space-x-0">
+                <h1 class="text-2xl text-white font-semibold">
+                  {% if user.name %}{{ user.name|title }}{% else %}{{ user.email }}{% endif %} </h1>
+                <h1 class="text-gray-900 font-semibold">
+                  {% if user.is_superuser %}
+                    Yönetici
+                  {% elif user.is_staff %}
+                    Yetkili
+                  {% else %}
+                    Kullanıcı
+                  {% endif %}
+                </h1>
+                <form id="pi-update-form" action="{% url "account.profilephoto.update" %}" method="post"
+                      enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input
+                    hidden
+                    type="file"
+                    id="file-upload"
+                    name="image"/>
+                  <button
+                    type="button"
+                    id="upload-image"
+                    class="flex space-x-1 text-white bg-orange-700 hover:bg-orange-800 font-medium rounded text-sm px-8 py-2">
+                    Resim Yükle
+                  </button>
+                  <button type="submit"
+                          class="hidden flex space-x-1 text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded text-sm px-8 py-2 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-5 h-5 stroke-white">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"></path>
+                    </svg>
+                    <span>Kaydet</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div id="imgPreview" class="hidden">
+              <div class="absolute ml-8 cursor-pointer" id="imgReset">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-6 h-6 stroke-white">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <img src="" alt="Ön izleme" width="48px" class="mt-4 rounded-full">
+            </div>
+          </div>
+        </div>
+        <div class="col-span-full md:col-span-2">
+          <div class="p-4 bg-orange-500 rounded shadow">
+            <h1 class="text-xl text-white font-semibold mb-2">Genel Bilgiler</h1>
+            <form action="{% url "account.update" %}" class="space-y-2" method="post">
+              {% csrf_token %}
+              <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-white">Email</label>
+                <input type="text" id="email"
+                       value="{{ user.email }}"
+                       class="bg-orange-500 border disabled:bg-gray-700 disabled:text-gray-300 border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                       placeholder="İsim" disabled>
+              </div>
+              <div>
+                <label for="name" class="block mb-2 text-sm font-medium text-white">İsim</label>
+                <input type="text" id="name" name="name"
+                       value="{{ user.name }}"
+                       class="bg-orange-500 border border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                       placeholder="İsim" required>
+              </div>
+              <button type="submit" class="text-white bg-orange-700 hover:bg-orange-800 rounded px-8 py-2">Kaydet
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+{% block extra_js_files %}
+  <script src="{% static "account/js/account.js" %}"></script>
+{% endblock %}

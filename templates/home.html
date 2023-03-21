@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  <section id="index" class="from-orange-600 to-white bg-gradient-to-b">
+    <div class="mx-auto border rounded bg-white p-4 my-24 px-6 space-y-4">
+      <div class="w-full text-center">
+                <span class="text-2xl tracking-wide uppercase font-semibold">
+                    Anketör
+                </span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <p class="text-lg">Sende anketler oluşturabilir ve katılabilirsin.</p>
+        </div>
+        {% if user.is_authenticated %}
+          <div class="font-semibold text-center">
+            <p>Hoşgeldin <span class="underline">{{ user.name }}</span></p>
+          </div>
+        {% endif %}
+        <div class="w-full text-center space-x-2">
+          <a href="#" class="p-1.5 border rounded bg-orange-600 hover:bg-orange-700 text-white px-4">Anket'e Katıl</a>
+          <a href="{% url "poll.index" %}"
+             class="p-1.5 border rounded bg-orange-600 hover:bg-orange-700 text-white px-4">Anketlerim</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
