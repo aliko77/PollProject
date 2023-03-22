@@ -14,7 +14,6 @@ from .forms import CreatePollForm, CreatePollQuestionForm, CreatePollAnswerForm
 # Create your views here.
 
 class ListPoll(LoginRequiredMixin, ListView):
-    redirect_field_name = "next"
     model = Poll
     template_name = "poll/index.html"
 

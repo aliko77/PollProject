@@ -33,8 +33,9 @@ class Login(LoginView):
 
 
 class Register(View):
-    @staticmethod
-    def post(request):
+    template_name = "account/register.html"
+
+    def post(self, request):
         """
         redirect guest users to home page
         """
@@ -48,16 +49,15 @@ class Register(View):
             )
             return redirect('login')
         else:
-            return render(request, 'account/register.html', {'form': form})
+            return render(request, self.template_name, {'form': form})
 
-    @staticmethod
-    def get(request):
+    def get(self, request):
         """
         redirect guest users to home page
         """
         if request.user.is_authenticated:
             return redirect('home')
-        return render(request=request, template_name='account/register.html')
+        return render(request, self.template_name)
 
 
 class Logout(LoginRequiredMixin, View):

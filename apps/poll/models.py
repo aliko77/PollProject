@@ -19,6 +19,7 @@ class Poll(models.Model):
     tags = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
     starts_at = models.DateTimeField(null=True, blank=True,
         help_text="date and time at which the poll open up for voting"
     )
@@ -126,3 +127,23 @@ class PollVote(models.Model):
 
     class Meta:
         ordering = ["id"]
+
+
+class PollPrivateLink(models.Model):
+    pool = models.ForeignKey(
+        Poll,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    link = models.TextField()
+    amount = models.PositiveBigIntegerField()
+    usage = models.PositiveBigIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

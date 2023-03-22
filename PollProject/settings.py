@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'apps.poll',
-    'apps.account'
+    'apps.account',
+    'apps.public_poll'
 ]
 
 MIDDLEWARE = [

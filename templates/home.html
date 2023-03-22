@@ -17,7 +17,8 @@
           </div>
         {% endif %}
         <div class="w-full text-center space-x-2">
-          <a href="#" class="p-1.5 border rounded bg-orange-600 hover:bg-orange-700 text-white px-4">Anket'e Katıl</a>
+          <a href="{% url "pool.public.list" %}"
+             class="p-1.5 border rounded bg-orange-600 hover:bg-orange-700 text-white px-4">Anket'e Katıl</a>
           <a href="{% url "poll.index" %}"
              class="p-1.5 border rounded bg-orange-600 hover:bg-orange-700 text-white px-4">Anketlerim</a>
         </div>
