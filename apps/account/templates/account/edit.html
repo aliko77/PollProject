@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-  <section id="accountEdit" class="bg-gradient-to-b from-orange-600 to-white">
+  <section id="accountEdit" class="bg-gradient-to-b from-orange-600 to-orange-300">
     <div>
       <div class="grid gap-4 grid-cols-3 p-4">
         <div class="col-span-full">
@@ -72,14 +72,14 @@
                 <input type="text" id="email"
                        value="{{ user.email }}"
                        class="bg-orange-500 border disabled:bg-gray-700 disabled:text-gray-300 border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                       placeholder="İsim" disabled>
+                       placeholder="Email" disabled>
               </div>
               <div>
-                <label for="name" class="block mb-2 text-sm font-medium text-white">İsim</label>
+                <label for="name" class="block mb-2 text-sm font-medium text-white">Kullanıcı adı</label>
                 <input type="text" id="name" name="name"
                        value="{{ user.name }}"
                        class="bg-orange-500 border border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                       placeholder="İsim" required>
+                       placeholder="Kullanıcı adı" required>
               </div>
               <button type="submit" class="text-white bg-orange-700 hover:bg-orange-800 rounded px-8 py-2">Kaydet
               </button>

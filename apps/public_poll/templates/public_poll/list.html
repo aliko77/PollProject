@@ -1,6 +1,63 @@
 {% extends "base.html" %}
 {% block content %}
-  <section id="index" class="from-orange-600 to-white bg-gradient-to-b">
-    {{ polls }}
+  <section id="list" class="from-orange-600 to-orange-300 bg-gradient-to-b">
+    <div class="space-y-10 m-4">
+      <div class="max-w-2xl w-full mx-auto">
+        <form method="get">
+          <label for="search-dropdown"
+                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <div class="relative w-full rounded-l shadow">
+            <input type="search" id="search-dropdown"
+                   value="{{ request.GET.search }}"
+                   name="search"
+                   class="block p-2.5 w-full z-20 text-sm text-gray-900 focus:ring-0 border border-gray-300 focus:border-gray-300 rounded"
+                   placeholder="Aradığınız anket hakkında...">
+            <button type="submit"
+                    class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-red-700 border border-red-700 rounded-r hover:bg-red-800">
+              <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <span class="sr-only">Search</span>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="max-w-2xl w-full mx-auto">
+        <div class="border rounded bg-white space-y-4 p-4 shadow">
+          <div class="text-center">
+            <h1 class="font-semibold text-2xl text-red-800">Kamusal Anketler</h1>
+          </div>
+          <hr>
+          {% if polls|length == 0 %}
+            <div>
+              <span class="text-gray-400">[{{ request.GET.search }}] ile Alakalı herhangi bir sonuç bulunamadı...</span>
+            </div>
+          {% endif %}
+          {% for poll in polls %}
+            <div class="border rounded px-4 py-3 hover:bg-gray-200 flex space-x-2 items-center">
+              <div class="grid grid-cols-3 items-center w-full">
+                <span class="truncate text-lg" title="{{ poll.title }}">{{ poll.title }}</span>
+                <span class="text-sm text-gray-400 truncate"
+                      title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
+                <span class="text-sm text-gray-400 truncate"
+                      title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
+              </div>
+              <div><span class="text-sm text-gray-400 truncate" title="Tahmini çözüm süresi">Ç: 5dk</span></div>
+              <div>
+                <a href="#">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                       stroke="currentColor" class="w-5 h-5 stroke-red-600">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </section>
 {% endblock %}

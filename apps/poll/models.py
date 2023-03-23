@@ -37,6 +37,8 @@ class Poll(models.Model):
     def _get_unique_slug(self) -> str:
         slug = slugify(self.title)
         unique_slug = slug
+        if slug == self.slug:
+            return unique_slug
         num = 1
         while Poll.objects.filter(slug=unique_slug).exists():
             unique_slug = "{}-{}".format(slug, num)
@@ -44,8 +46,7 @@ class Poll(models.Model):
         return unique_slug
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = self._get_unique_slug()
+        self.slug = self._get_unique_slug()
         return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
