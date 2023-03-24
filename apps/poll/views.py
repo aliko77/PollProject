@@ -81,7 +81,7 @@ class UpdatePoll(LoginRequiredMixin, View):
             poll_object.description = request.POST.get("description")
             poll_object.tags = request.POST.get("tags").strip().replace(" ", "")
             poll_object.is_active = True if request.POST.get("is_active") == "on" else False
-            poll_object.is_active = True if request.POST.get("is_active") == "on" else False
+            poll_object.is_private = True if request.POST.get("is_private") == "on" else False
             poll_object.save()
             messages.success(request, "Başarıyla düzenlendi.")
         except ValueError:

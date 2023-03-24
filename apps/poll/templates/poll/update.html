@@ -85,7 +85,7 @@
                 class="text-xs text-gray-500">*Virgül ile ayırarak yazınız.</span>
             </div>
             <div class="flex items-start mb-4">
-              <div class="flex items-center h-5">
+              <div class="flex items-center h-5 space-x-2">
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input type="hidden" name="is_active" value="off"/>
                   <input type="checkbox" value="on" name="is_active" class="sr-only peer" {% if poll.is_active %}
@@ -93,6 +93,15 @@
                   <div
                     class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
                   <span class="ml-3 text-sm font-medium text-gray-900">Anket aktif mi ?</span>
+                </label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="hidden" name="is_private" value="off"/>
+                  <input type="checkbox" value="on" name="is_private" class="sr-only peer" {% if poll.is_private %}
+                         checked {% endif %}>
+                  <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                  <span class="ml-3 text-sm font-medium text-gray-900">Anket özel mi ? <span
+                    class="text-xs text-gray-400">(Herkes çözebilir mi ?)</span> </span>
                 </label>
               </div>
             </div>
