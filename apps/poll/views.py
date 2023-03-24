@@ -37,6 +37,7 @@ class CreatePoll(LoginRequiredMixin, View):
             return render(request, self.template_name)
         try:
             b_is_active = True if request.POST.get("is_active") == "on" else False
+            b_is_private = True if request.POST.get("is_private") == "on" else False
             b_tags = request.POST.get("tags").strip().replace(" ", "")
             b_starts_at = datetime.datetime.now() if b_is_active else None
             cp = Poll(
@@ -47,6 +48,7 @@ class CreatePoll(LoginRequiredMixin, View):
                 tags=b_tags,
                 starts_at=b_starts_at,
                 is_active=b_is_active,
+                is_private=b_is_private
             )
             cp.save()
             messages.success(self.request, "Başarıyla eklendi.")
@@ -78,6 +80,7 @@ class UpdatePoll(LoginRequiredMixin, View):
             poll_object.title = request.POST.get("title")
             poll_object.description = request.POST.get("description")
             poll_object.tags = request.POST.get("tags").strip().replace(" ", "")
+            poll_object.is_active = True if request.POST.get("is_active") == "on" else False
             poll_object.is_active = True if request.POST.get("is_active") == "on" else False
             poll_object.save()
             messages.success(request, "Başarıyla düzenlendi.")

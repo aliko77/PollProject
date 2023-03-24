@@ -6,6 +6,7 @@ class CreatePollForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea, required=False)
     tags = forms.CharField(required=True, label="Etiketler")
     is_active = forms.BooleanField(required=True)
+    is_private = forms.BooleanField(required=True)
 
 
 class CreatePollQuestionForm(forms.Form):
