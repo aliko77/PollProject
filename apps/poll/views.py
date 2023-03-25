@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
-from .models import Poll, PollQuestion, PollAnswer, PollQuestionChoices
+from .models import Poll, PollQuestion, PollAnswer, PollQuestionChoices, PollInviteLinks
 from .forms import CreatePollForm, CreatePollQuestionForm, CreatePollAnswerForm
 
 
@@ -253,3 +253,19 @@ class DeletePollAnswer(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse_lazy('poll.answer.create',
             kwargs={"poll_id": self.object.poll.id, "question_id": self.object.question.id}
         )
+
+
+class CreatePollInviteLink(LoginRequiredMixin, View):
+    template_name = "poll/update.html"
+
+    def post(self, request, poll_id):
+        poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
+        pil = PollInviteLinks(
+            amount=0,
+            usage=0,
+            author=self.request.user,
+            poll=poll_object
+        )
+        pil.save()
+        messages.success(self.request, "Başarıyla eklendi.")
+        return render(request, self.template_name, {"poll": poll_object})

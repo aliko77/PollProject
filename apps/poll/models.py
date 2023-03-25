@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
 from .utils import PollQuestionChoices
+import random
+import string
 
 
 # Create your models here.
@@ -33,6 +35,7 @@ class Poll(models.Model):
         ordering = ["-id"]
         verbose_name = "Anket"
         verbose_name_plural = "Anketler"
+        db_table = "poll"
 
     def _get_unique_slug(self) -> str:
         slug = slugify(self.title)
@@ -72,6 +75,7 @@ class PollQuestion(models.Model):
         ordering = ["-id"]
         verbose_name = "Anket Soruları"
         verbose_name_plural = "Anket Soruları"
+        db_table = "poll_question"
 
 
 class PollAnswer(models.Model):
@@ -95,6 +99,7 @@ class PollAnswer(models.Model):
 
     class Meta:
         ordering = ["-id"]
+        db_table = "poll_answer"
 
 
 class PollVote(models.Model):
@@ -128,10 +133,21 @@ class PollVote(models.Model):
 
     class Meta:
         ordering = ["id"]
+        db_table = "poll_vote"
 
 
-class PollPrivateLink(models.Model):
-    pool = models.ForeignKey(
+def _generate_random_code(length=5, max_attempts=10):
+    letters_and_digits = string.ascii_letters + string.digits
+    for i in range(max_attempts):
+        code = ''.join(random.choices(letters_and_digits, k=length))
+        if not PollInviteLinks.objects.filter(link=code).exists():
+            return code
+    length += 1
+    return _generate_random_code(length=length)
+
+
+class PollInviteLinks(models.Model):
+    poll = models.ForeignKey(
         Poll,
         on_delete=models.CASCADE,
         null=True,
@@ -143,8 +159,16 @@ class PollPrivateLink(models.Model):
         null=True,
         blank=True
     )
-    link = models.TextField()
+    link = models.CharField(max_length=255, unique=True, default=_generate_random_code)
     amount = models.PositiveBigIntegerField()
     usage = models.PositiveBigIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.link:
+            self.code = _generate_random_code()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = "poll_invite_links"

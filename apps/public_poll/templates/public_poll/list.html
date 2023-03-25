@@ -32,7 +32,12 @@
           <hr>
           {% if polls|length == 0 %}
             <div>
-              <span class="text-gray-400">[{{ request.GET.search }}] ile Alakalı herhangi bir sonuç bulunamadı...</span>
+              {% if request.GET.search|default:"None" == "None" %}
+                <span class="text-gray-400">Herhangi bir anket bulunamadı.</span>
+              {% else %}
+                <span
+                  class="text-gray-400">[{{ request.GET.search }}] ile Alakalı herhangi bir sonuç bulunamadı...</span>
+              {% endif %}
             </div>
           {% endif %}
           {% for poll in polls %}
@@ -44,7 +49,8 @@
                 <span class="text-sm text-gray-400 truncate"
                       title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
               </div>
-              <div><span class="text-sm text-gray-400 truncate" title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span></div>
+              <div><span class="text-sm text-gray-400 truncate"
+                         title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span></div>
               <div>
                 <a href="#">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
