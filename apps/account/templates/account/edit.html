@@ -13,8 +13,7 @@
               <img src="{{ MEDIA_URL }}{{ user.profile.image.url }}" alt="profile-picture"
                    class="w-28 rounded-full">
               <div class="flex flex-col justify-between space-y-1 sm:space-x-0">
-                <h1 class="text-2xl text-white font-semibold">
-                  {% if user.name %}{{ user.name|title }}{% else %}{{ user.email }}{% endif %} </h1>
+                <h1 class="text-2xl text-white font-semibold">{{ user.name|default_if_none:user.email }}</h1>
                 <h1 class="text-gray-900 font-semibold">
                   {% if user.is_superuser %}
                     Yönetici
@@ -77,8 +76,8 @@
               <div>
                 <label for="name" class="block mb-2 text-sm font-medium text-white">Kullanıcı adı</label>
                 <input type="text" id="name" name="name"
-                       value="{{ user.name }}"
-                       class="bg-orange-500 border border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                       value="{{ user.name|default_if_none:"" }}"
+                       class="bg-orange-500 border border-gray-300 placeholder-white text-white text-sm rounded-lg focus:ring-orange-500 focus:border-white block w-full p-2.5"
                        placeholder="Kullanıcı adı" required>
               </div>
               <button type="submit" class="text-white bg-orange-700 hover:bg-orange-800 rounded px-8 py-2">Kaydet

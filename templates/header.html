@@ -19,9 +19,9 @@
       {% else %}
         <a href="{% url "poll.index" %}" class="flex hover:underline items-center space-x-1">
           <img class="w-6 rounded-full" src="{{ MEDIA_URL }}{{ user.profile.image.url }}"
-               alt="{{ user.name }} profile image">
+               alt="{{ user.name|default_if_none:user.email }} profile image">
           <span>
-            {% if user.name %} {{ user.name }} {% else %} {{ user.email }} {% endif %}
+            {{ user.name|default_if_none:user.email }}
         </span>
         </a>
         <a class="flex items-center space-x-1 hover:underline" href="{% url 'logout' %}">

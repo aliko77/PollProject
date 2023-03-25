@@ -260,12 +260,19 @@ class CreatePollInviteLink(LoginRequiredMixin, View):
 
     def post(self, request, poll_id):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
-        pil = PollInviteLinks(
-            amount=0,
-            usage=0,
-            author=self.request.user,
-            poll=poll_object
-        )
-        pil.save()
-        messages.success(self.request, "Başarıyla eklendi.")
+        if poll_object.pollinvitelinks_set.count() >= 10:
+            messages.error(self.request, "Maksimum 10 adet davet linki oluşturabilirsin.")
+            return render(request, self.template_name, {"poll": poll_object})
+        else:
+            try:
+                pil = PollInviteLinks(
+                    amount=0,
+                    usage=0,
+                    author=self.request.user,
+                    poll=poll_object
+                )
+                pil.save()
+                messages.success(self.request, "Başarıyla eklendi.")
+            except ValueError:
+                messages.error(self.request, "Bir hata oluştu.")
         return render(request, self.template_name, {"poll": poll_object})
