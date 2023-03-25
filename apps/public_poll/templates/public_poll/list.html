@@ -44,7 +44,7 @@
                 <span class="text-sm text-gray-400 truncate"
                       title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
               </div>
-              <div><span class="text-sm text-gray-400 truncate" title="Tahmini çözüm süresi">Ç: 5dk</span></div>
+              <div><span class="text-sm text-gray-400 truncate" title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span></div>
               <div>
                 <a href="#">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
