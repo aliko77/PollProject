@@ -1,12 +1,29 @@
 # from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import ListView
 from django.db.models import Q
-from apps.poll.models import Poll
+from apps.poll.models import Poll, PollInviteLinks
 
 
 # Create your views here.
 
-class ListPublicPool(ListView):
+def ispollready(poll, invite_link=None):
+    if not poll.is_active:
+        return False
+    if poll.is_private:
+        if not invite_link:
+            return False
+        else:
+            is_exist = poll.pollinvitelinks_set.get(link=invite_link)
+            if not is_exist:
+                return False
+    if poll.pollquestion_set.count() == 0 or (poll.pollanswer_set.count() < poll.pollquestion_set.count()):
+        return False
+    return True
+
+
+class ListPublicPoll(ListView):
     model = Poll
     template_name = "public_poll/list.html"
     context_object_name = 'polls'
@@ -22,3 +39,36 @@ class ListPublicPool(ListView):
                 Q(tags__icontains=search_value)
             )
         return queryset
+
+
+class VotePublicPoll(View):
+    template_name = "public_poll/vote.html"
+
+    def get(self, request, poll_slug):
+        poll_object = get_object_or_404(Poll, slug=poll_slug)
+        if not ispollready(poll_object):
+            return redirect("poll.public.list")
+        return render(request, self.template_name,
+            {
+                "poll"     : poll_object,
+                "questions": poll_object.pollquestion_set.all(),
+                "answers"  : poll_object.pollanswer_set.all()
+            }
+        )
+
+
+class VotePublicPollWithInvite(View):
+    template_name = "public_poll/vote.html"
+
+    def get(self, request, invite_link):
+        invite_object = get_object_or_404(PollInviteLinks, link=invite_link)
+        poll_object = get_object_or_404(Poll, pk=invite_object.poll.pk)
+        if not ispollready(poll_object, invite_link):
+            return redirect("poll.public.list")
+        return render(request, self.template_name,
+            {
+                "poll"     : poll_object,
+                "questions": poll_object.pollquestion_set.all(),
+                "answers"  : poll_object.pollanswer_set.all()
+            }
+        )

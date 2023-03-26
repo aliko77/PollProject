@@ -276,3 +276,22 @@ class CreatePollInviteLink(LoginRequiredMixin, View):
             except ValueError:
                 messages.error(self.request, "Bir hata oluştu.")
         return render(request, self.template_name, {"poll": poll_object})
+
+
+class DeletePollInviteLink(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = PollInviteLinks
+    success_message = "Başarıyla silindi."
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.poll.author == self.request.user
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy('poll.update',
+            kwargs={"pk": self.object.poll.id}
+        )

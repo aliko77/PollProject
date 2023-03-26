@@ -3,7 +3,7 @@ from .views import \
     ListPoll, CreatePoll, UpdatePoll, DeletePoll, \
     CreatePollQuestion, UpdatePollQuestion, DeletePollQuestion, \
     CreatePollAnswer, UpdatePollAnswer, DeletePollAnswer, \
-    CreatePollInviteLink
+    CreatePollInviteLink, DeletePollInviteLink
 
 urlpatterns = [
     path("index", ListPoll.as_view(), name="poll.index"),
@@ -24,6 +24,7 @@ urlpatterns = [
     path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/delete", DeletePollAnswer.as_view(),
         name="poll.answer.delete"
     ),
-    # Pool Invites
-    path("<int:poll_id>/invite/create", CreatePollInviteLink.as_view(), name="poll.invite")
+    # Poll Invites
+    path("<int:poll_id>/invite/create", CreatePollInviteLink.as_view(), name="poll.invite"),
+    path("<int:poll_id>/invite/<int:pk>/delete", DeletePollInviteLink.as_view(), name="poll.invite.delete")
 ]
