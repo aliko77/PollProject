@@ -25,11 +25,11 @@
         </form>
       </div>
       <div class="max-w-2xl w-full mx-auto">
-        <div class="border rounded bg-white space-y-4 p-4 shadow">
+        <div class="border rounded bg-white p-4 shadow">
           <div class="text-center">
             <h1 class="font-semibold text-2xl text-red-800">Kamusal Anketler</h1>
           </div>
-          <hr>
+          <hr class="my-4">
           {% if polls|length == 0 %}
             <div>
               {% if request.GET.search|default:"None" == "None" %}
@@ -41,28 +41,28 @@
             </div>
           {% endif %}
           {% for poll in polls %}
-            <div class="border rounded px-4 py-3 hover:bg-gray-200 flex space-x-2 items-center">
-              <div class="grid grid-cols-3 items-center w-full">
-                <span class="truncate text-lg" title="{{ poll.title }}">{{ poll.title }}</span>
-                <span class="text-sm text-gray-400 truncate"
-                      title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
-                <span class="text-sm text-gray-400 truncate"
-                      title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
-              </div>
-              <div>
-                <span class="text-sm text-gray-400 truncate"
-                      title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span>
-              </div>
-              <div>
-                <a href="{% url "poll.public.vote" poll_slug=poll.slug %}">
+            <a href="{% url "poll.public.vote" poll_slug=poll.slug %}">
+              <div class="border rounded px-4 py-3 hover:bg-gray-200 flex space-x-2 items-center">
+                <div class="grid grid-cols-3 items-center w-full">
+                  <span class="truncate text-lg" title="{{ poll.title }}">{{ poll.title }}</span>
+                  <span class="text-sm text-gray-400 truncate"
+                        title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
+                  <span class="text-sm text-gray-400 truncate"
+                        title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-400 truncate"
+                        title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span>
+                </div>
+                <div>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                        stroke="currentColor" class="w-5 h-5 stroke-red-600">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
                   </svg>
-                </a>
+                </div>
               </div>
-            </div>
+            </a>
           {% endfor %}
         </div>
       </div>
