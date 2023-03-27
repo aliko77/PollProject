@@ -1,13 +1,13 @@
 class PollQuestionChoices:
     CHOICES = (
         ("TXT", "Text"),
-        ("CHBX", "CheckBox"),
+        ("NMBR", "Number"),
         ("DTE", "Date"),
         ("EMAIL", "Email"),
-        ("NMBR", "Number"),
-        ("RDO", "Radio"),
-        ("RNG", "Range"),
         ("TME", "Time"),
+        ("RNG", "Range"),
+        ("CHBX", "CheckBox"),
+        ("RDO", "Radio"),
     )
 
     @classmethod

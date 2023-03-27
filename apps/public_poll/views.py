@@ -23,6 +23,16 @@ def ispollready(poll, invite_link=None):
     return True
 
 
+def render_vote_html(request, template_name, poll_object):
+    return render(request, template_name,
+        {
+            "poll"     : poll_object,
+            "questions": poll_object.pollquestion_set.all(),
+            "cho_list" : ("text", "number", "date", "email", "time")
+        }
+    )
+
+
 class ListPublicPoll(ListView):
     model = Poll
     template_name = "public_poll/list.html"
@@ -48,12 +58,7 @@ class VotePublicPoll(View):
         poll_object = get_object_or_404(Poll, slug=poll_slug)
         if not ispollready(poll_object):
             return redirect("poll.public.list")
-        return render(request, self.template_name,
-            {
-                "poll"     : poll_object,
-                "questions": poll_object.pollquestion_set.all(),
-            }
-        )
+        return render_vote_html(request, self.template_name, poll_object)
 
 
 class VotePublicPollWithInvite(View):
@@ -64,9 +69,4 @@ class VotePublicPollWithInvite(View):
         poll_object = get_object_or_404(Poll, pk=invite_object.poll.pk)
         if not ispollready(poll_object, invite_link):
             return redirect("poll.public.list")
-        return render(request, self.template_name,
-            {
-                "poll"     : poll_object,
-                "questions": poll_object.pollquestion_set.all(),
-            }
-        )
+        return render_vote_html(request, self.template_name, poll_object)

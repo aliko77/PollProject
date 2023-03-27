@@ -2,7 +2,7 @@
 {% block content %}
   <section id="vote" class="from-orange-600 to-orange-300 bg-gradient-to-b">
     <div class="flex justify-center">
-      <div class="border p-4 rounded bg-white m-10 max-w-4xl w-full space-y-2">
+      <div class="border p-4 rounded bg-white m-10 max-w-3xl w-full space-y-2">
         <div class="flex space-x-4 items-center justify-between">
           <h1 class="text-xl font-medium">{{ poll.title|title }}</h1>
           <div class="space-x-2 items-center text-gray-500">
@@ -29,13 +29,23 @@
                     class="relative w-4 h-4 border border-gray-300 rounded-full flex justify-center items-center text-center shadow p-3.5">
                     <span>{{ forloop.counter }}</span>
                   </div>
-                  <span class="text-lg font-medium">{{ question.content }}</span>
+                  <label for="{{ question.content|slugify }}_{{ question.id }}"
+                         class="text-lg font-medium">{{ question.content }}</label>
                 </div>
                 <div id="answers" class="ml-10 mt-2">
+                  <div>
+                    {% if question.get_type_display|slugify in cho_list %}
+                      <input type="{{ question.get_type_display|slugify }}"
+                             id="{{ question.content|slugify }}_{{ question.id }}"
+                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-orange-500 block w-full max-w-xl p-2.5"
+                             placeholder="{{ question.content }}" required>
+                    {% elif question.get_type_display|slugify == "range" %}
+                      <input type="range" min="0" max="10" value="2"
+                             id="{{ question.content|slugify }}_{{ question.id }}"
+                             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    {% endif %}
+                  </div>
                   {# TODO Question type 'a göre answer ayarı #}
-                  {% for answer in question.pollanswer_set.all %}
-                    <div>{{ answer.content }}</div>
-                  {% endfor %}
                 </div>
               </div>
             {% endfor %}
