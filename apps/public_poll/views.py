@@ -52,7 +52,6 @@ class VotePublicPoll(View):
             {
                 "poll"     : poll_object,
                 "questions": poll_object.pollquestion_set.all(),
-                "answers"  : poll_object.pollanswer_set.all()
             }
         )
 
@@ -69,6 +68,5 @@ class VotePublicPollWithInvite(View):
             {
                 "poll"     : poll_object,
                 "questions": poll_object.pollquestion_set.all(),
-                "answers"  : poll_object.pollanswer_set.all()
             }
         )

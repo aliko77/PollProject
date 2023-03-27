@@ -1,6 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
   <section id="vote" class="from-orange-600 to-orange-300 bg-gradient-to-b">
-    {{ poll }}
+    <div class="flex justify-center">
+      <div class="border p-4 rounded bg-white m-10 max-w-4xl w-full space-y-2">
+        <div class="flex space-x-4 items-center justify-between">
+          <h1 class="text-xl font-medium">{{ poll.title|title }}</h1>
+          <div class="space-x-2 items-center text-gray-500">
+            <span>Oluşturan: {{ poll.author.name|default_if_none:poll.author.email }}</span>
+            <span>|</span>
+            <span>{{ poll.created_at|date }}</span>
+          </div>
+        </div>
+        <div class="text-xs text-gray-500">Anket Hakkında: {{ poll.description }}</div>
+        <hr>
+        <div class="flex space-x-4 items-center justify-between text-gray-500 text-xs">
+          {% if poll.is_private %}
+            <span>Anket Durumu: Özel</span>
+          {% else %}
+            <span>Anket Durumu: Halka açık</span>
+          {% endif %}
+        </div>
+        <div id="questions" class="space-y-2">
+          <div class="mt-8">
+            {% for question in questions %}
+              <div>
+                <div class="flex space-x-2 items-center question">
+                  <div
+                    class="relative w-4 h-4 border border-gray-300 rounded-full flex justify-center items-center text-center shadow p-3.5">
+                    <span>{{ forloop.counter }}</span>
+                  </div>
+                  <span class="text-lg font-medium">{{ question.content }}</span>
+                </div>
+                <div id="answers" class="ml-10 mt-2">
+                  {# TODO Question type 'a göre answer ayarı #}
+                  {% for answer in question.pollanswer_set.all %}
+                    <div>{{ answer.content }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 {% endblock %}
