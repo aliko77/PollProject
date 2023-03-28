@@ -18,7 +18,8 @@ def ispollready(poll, invite_link=None):
             is_exist = poll.pollinvitelinks_set.get(link=invite_link)
             if not is_exist:
                 return False
-    if poll.pollquestion_set.count() == 0 or (poll.pollanswer_set.count() < poll.pollquestion_set.count()):
+    if poll.pollquestion_set.filter(is_active=True).count() == 0 or (
+            poll.pollanswer_set.filter(is_active=True).count() < poll.pollquestion_set.filter(is_active=True).count()):
         return False
     return True
 
@@ -27,7 +28,7 @@ def render_vote_html(request, template_name, poll_object):
     return render(request, template_name,
         {
             "poll"     : poll_object,
-            "questions": poll_object.pollquestion_set.all(),
+            "questions": poll_object.pollquestion_set.order_by("id"),
             "cho_list" : ("text", "number", "date", "email", "time")
         }
     )

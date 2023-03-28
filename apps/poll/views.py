@@ -124,6 +124,7 @@ class CreatePollQuestion(LoginRequiredMixin, View):
             cpq = PollQuestion(
                 type=request.POST.get("type"),
                 content=request.POST.get("content"),
+                meta=request.POST.get("meta"),
                 is_active=True if request.POST.get("is_active") == "on" else False,
                 poll=poll_object
             )
@@ -153,6 +154,7 @@ class UpdatePollQuestion(LoginRequiredMixin, View):
             poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
             question_object = get_object_or_404(PollQuestion, pk=pk, poll_id=poll_object.id)
             question_object.content = request.POST.get("content")
+            question_object.meta = request.POST.get("meta")
             question_object.type = request.POST.get("type")
             question_object.is_active = True if request.POST.get("is_active") == "on" else False
             question_object.save()
@@ -198,7 +200,7 @@ class CreatePollAnswer(LoginRequiredMixin, View):
             question_object = get_object_or_404(PollQuestion, pk=question_id, poll_id=poll_object.id)
             cpa = PollAnswer(
                 content=request.POST.get("content"),
-                meta=request.POST.get("meta"),
+                meta= PollAnswer.set_meta_data(request.POST.get("meta")),
                 is_active=True if request.POST.get("is_active") else False,
                 question=question_object,
                 poll=poll_object

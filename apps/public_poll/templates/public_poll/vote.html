@@ -21,7 +21,7 @@
           {% endif %}
         </div>
         <div id="questions" class="space-y-2">
-          <div class="mt-8">
+          <div class="mt-8 mb-4 space-y-8">
             {% for question in questions %}
               <div>
                 <div class="flex space-x-2 items-center question">
@@ -40,6 +40,10 @@
                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-orange-500 block w-full max-w-xl p-2.5"
                              placeholder="{{ question.content }}" required>
                     {% elif question.get_type_display|slugify == "range" %}
+                      <div class="flex justify-between text-gray-500 text-sm">
+                        <span>{{ question.get_meta_data.min|default:"0" }}</span>
+                        <span>{{ question.get_meta_data.max|default:"100" }}</span>
+                      </div>
                       <input type="range" min="0" max="100" value="0"
                              id="{{ question.content|slugify }}_{{ question.id }}"
                              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">

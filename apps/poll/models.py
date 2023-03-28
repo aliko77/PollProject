@@ -1,3 +1,4 @@
+from json import loads, dumps
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
@@ -67,9 +68,22 @@ class PollQuestion(models.Model):
         default=PollQuestionChoices.get_default()
     )
     content = models.TextField()
+    meta = models.CharField(null=True, blank=True, max_length=1024, default="{}")
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_meta_data(self):
+        return loads(self.meta)
+
+    def set_meta_data(self, data):
+        self.meta = dumps(data or "{}")
+
+    def save(self, *args, **kwargs):
+        self.set_meta_data(self, "")
+        return super().save(*args, **kwargs)
+
+    meta_data = property(get_meta_data, set_meta_data)
 
     class Meta:
         ordering = ["-id"]
@@ -91,11 +105,23 @@ class PollAnswer(models.Model):
         null=True,
         blank=True
     )
-    meta = models.TextField(null=True, blank=True)
+    meta = models.CharField(null=True, blank=True, max_length=1024, default="{}")
     content = models.TextField()
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_meta_data(self):
+        return loads(self.meta)
+
+    def set_meta_data(self, data):
+        self.meta = dumps(data or "{}")
+
+    def save(self, *args, **kwargs):
+        self.set_meta_data()
+        return super().save(*args, **kwargs)
+
+    meta_data = property(get_meta_data, set_meta_data)
 
     class Meta:
         ordering = ["-id"]
