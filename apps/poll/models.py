@@ -76,14 +76,7 @@ class PollQuestion(models.Model):
     def get_meta_data(self):
         return loads(self.meta)
 
-    def set_meta_data(self, data):
-        self.meta = dumps(data or "{}")
-
-    def save(self, *args, **kwargs):
-        self.set_meta_data(self, "")
-        return super().save(*args, **kwargs)
-
-    meta_data = property(get_meta_data, set_meta_data)
+    meta_data = property(get_meta_data)
 
     class Meta:
         ordering = ["-id"]
@@ -114,14 +107,7 @@ class PollAnswer(models.Model):
     def get_meta_data(self):
         return loads(self.meta)
 
-    def set_meta_data(self, data):
-        self.meta = dumps(data or "{}")
-
-    def save(self, *args, **kwargs):
-        self.set_meta_data()
-        return super().save(*args, **kwargs)
-
-    meta_data = property(get_meta_data, set_meta_data)
+    meta_data = property(get_meta_data)
 
     class Meta:
         ordering = ["-id"]

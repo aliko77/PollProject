@@ -18,8 +18,9 @@ def ispollready(poll, invite_link=None):
             is_exist = poll.pollinvitelinks_set.get(link=invite_link)
             if not is_exist:
                 return False
-    if poll.pollquestion_set.filter(is_active=True).count() == 0 or (
-            poll.pollanswer_set.filter(is_active=True).count() < poll.pollquestion_set.filter(is_active=True).count()):
+    questions = poll.pollquestion_set.filter(is_active=True)
+    answers = poll.pollanswer_set.filter(is_active=True)
+    if questions.count() == 0 or (answers.count() < questions.count()):
         return False
     return True
 
