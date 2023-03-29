@@ -170,7 +170,7 @@ class DeletePollQuestion(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.author == self.request.user
+        return obj.poll.author == self.request.user
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -200,7 +200,7 @@ class CreatePollAnswer(LoginRequiredMixin, View):
             question_object = get_object_or_404(PollQuestion, pk=question_id, poll_id=poll_object.id)
             cpa = PollAnswer(
                 content=request.POST.get("content"),
-                meta= PollAnswer.set_meta_data(request.POST.get("meta")),
+                meta=request.POST.get("meta"),
                 is_active=True if request.POST.get("is_active") else False,
                 question=question_object,
                 poll=poll_object
@@ -244,7 +244,7 @@ class DeletePollAnswer(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.author == self.request.user
+        return obj.poll.author == self.request.user
 
     def form_valid(self, form):
         response = super().form_valid(form)

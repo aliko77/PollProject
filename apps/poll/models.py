@@ -1,3 +1,4 @@
+import json
 from json import loads, dumps
 from django.db import models
 from django.conf import settings
@@ -74,9 +75,15 @@ class PollQuestion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_meta_data(self):
-        return loads(self.meta)
+        try:
+            return loads(self.meta)
+        except ValueError:
+            return {}
 
-    meta_data = property(get_meta_data)
+    def set_meta_data(self, data):
+        self.meta = dumps(data)
+
+    meta_data = property(get_meta_data, set_meta_data)
 
     class Meta:
         ordering = ["-id"]
@@ -107,7 +114,10 @@ class PollAnswer(models.Model):
     def get_meta_data(self):
         return loads(self.meta)
 
-    meta_data = property(get_meta_data)
+    def set_meta_data(self, data):
+        self.meta = dumps(data)
+
+    meta_data = property(get_meta_data, set_meta_data)
 
     class Meta:
         ordering = ["-id"]

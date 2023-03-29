@@ -38,7 +38,7 @@
                       <input type="{{ question.get_type_display|slugify }}"
                              id="{{ question.content|slugify }}_{{ question.id }}"
                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-orange-500 block w-full max-w-xl p-2.5"
-                             placeholder="{{ question.content }}" required>
+                             placeholder="{{ question.content }}">
                     {% elif question.get_type_display|slugify == "range" %}
                       <div class="flex justify-between text-gray-500 text-sm">
                         <span>{{ question.get_meta_data.min|default:"0" }}</span>
@@ -47,6 +47,32 @@
                       <input type="range" min="0" max="100" value="0"
                              id="{{ question.content|slugify }}_{{ question.id }}"
                              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    {% elif question.get_type_display|slugify == "checkbox" %}
+                      <div class="flex flex-col space-y-1">
+                        {% for answer in question.pollanswer_set.all %}
+                          <div class="flex space-x-1 items-center">
+                            <input id="{{ answer.content|slugify }}_{{ forloop.counter }}" type="checkbox"
+                                   value="{{ answer.content|slugify }}"
+                                   name="{{ question.content|slugify }}[]"
+                                   class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2">
+                            <label for="{{ answer.content|slugify }}_{{ forloop.counter }}"
+                                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content }}</label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% elif question.get_type_display|slugify == "radio" %}
+                      <div class="flex flex-col space-y-1">
+                        {% for answer in question.pollanswer_set.all %}
+                          <div class="flex items-center">
+                            <input id="{ answer.content|slugify }}_{{ forloop.counter }}" type="radio"
+                                   value="{{ answer.content|slugify }}"
+                                   name="{{ question.content|slugify }}"
+                                   class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 focus:ring-2">
+                            <label for="{ answer.content|slugify }}_{{ forloop.counter }}"
+                                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content }}</label>
+                          </div>
+                        {% endfor %}
+                      </div>
                     {% endif %}
                   </div>
                   {# TODO Question type 'a göre answer ayarı #}
