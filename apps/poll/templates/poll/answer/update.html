@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <section id="updateAnswer" class="from-orange-600 to-orange-300 bg-gradient-to-b">
+  <section id="updateAnswer">
     <div class="absolute flex right-0 space-x-4 px-4">
       <div>
         <a href="{% url "poll.answer.create" poll_id=answer.poll.id question_id=answer.question.id %}" title="Geri dön"
