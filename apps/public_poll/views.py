@@ -20,7 +20,7 @@ def ispollready(poll, invite_link=None):
                 return False
     questions = poll.pollquestion_set.filter(is_active=True)
     answers = poll.pollanswer_set.filter(is_active=True)
-    if questions.count() == 0 or (answers.count() < questions.count()):
+    if questions.count() == 0 or answers.count() == 0:
         return False
     return True
 

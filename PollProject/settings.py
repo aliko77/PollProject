@@ -107,7 +107,7 @@ AUTHENTICATION_BACKENDS = [
 
 LANGUAGE_CODE = 'tr-TR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 
@@ -131,7 +131,7 @@ TAILWIND_APP_NAME = "theme"
 
 # Tailwind npm bin path
 
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Accounts Urls
 
