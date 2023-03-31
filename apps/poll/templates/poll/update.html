@@ -143,7 +143,7 @@
           {% for pollinvitelink in poll.pollinvitelinks_set.all %}
             <div class="flex items-center space-x-2">
               <div class="grid grid-cols-3 items-center w-full">
-                <h1 class="text-gray-900">/anketler/i/{{ pollinvitelink.link }}</h1>
+                <a href="{% url "poll.public.vote.invite" invite_link=pollinvitelink.link %}" class="text-gray-900 underline hover:text-orange-500">/anketler/i/{{ pollinvitelink.link }}</a>
                 <span
                   class="text-gray-500 text-sm">{{ pollinvitelink.author.name|default_if_none:pollinvitelink.author }}</span>
                 <span class="text-gray-500 text-sm">{{ pollinvitelink.created_at }}</span>

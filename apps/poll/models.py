@@ -70,6 +70,7 @@ class PollQuestion(models.Model):
     )
     content = models.TextField()
     meta = models.CharField(null=True, blank=True, max_length=1024, default="{}")
+    is_required = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -4,6 +4,7 @@ from django.views import View
 from django.views.generic import ListView
 from django.db.models import Q
 from apps.poll.models import Poll, PollInviteLinks
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -62,6 +63,9 @@ class VotePublicPoll(View):
             return redirect("poll.public.list")
         return render_vote_html(request, self.template_name, poll_object)
 
+    def post(self, request, **kwargs):
+        return SubmitPublicPoll(request).post()
+
 
 class VotePublicPollWithInvite(View):
     template_name = "public_poll/vote.html"
@@ -72,3 +76,18 @@ class VotePublicPollWithInvite(View):
         if not ispollready(poll_object, invite_link):
             return redirect("poll.public.list")
         return render_vote_html(request, self.template_name, poll_object)
+
+    def post(self, request, **kwargs):
+        return HttpResponse(SubmitPublicPoll(request).post())
+
+
+class SubmitPublicPoll:
+    def __init__(self, request):
+        self.request = request
+
+    def post(self):
+        args = self.request.POST
+        poll_object = get_object_or_404(Poll, id=args.get("poll_identy"))
+        if not ispollready(poll_object):
+            return redirect("poll.public.list")
+        return poll_object
