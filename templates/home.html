@@ -3,6 +3,9 @@
   <section id="index">
     <div class="flex justify-center">
       <div class="rounded bg-white text-gray-900 p-4 px-6 space-y-4 w-full max-w-2xl my-24 mx-4 text-center">
+        {% if messages %}
+          {% include "partials/messages.html" %}
+        {% endif %}
         <div>
           <span class="text-2xl tracking-wide uppercase font-semibold">Anketör</span>
         </div>

@@ -95,11 +95,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "account.User"
 
-
 # Auth backend
 AUTHENTICATION_BACKENDS = [
     'apps.account.backends.AuthBackend.EmailBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    # 'django.contrib.auth.backends.ModelBackend'
 ]
 
 # Internationalization
@@ -143,3 +142,10 @@ LOGOUT_REDIRECT_URL = "home"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where uploaded media is saved.
 MEDIA_URL = '/media/'  # Public URL at the browser
+
+# EMAIL SERVER
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '562a52fa2435f9'
+EMAIL_HOST_PASSWORD = '068c5e92d1826d'
+EMAIL_PORT = '2525'
