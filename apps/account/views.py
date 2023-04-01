@@ -1,17 +1,10 @@
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.contrib import messages
 from django.views.generic import UpdateView
-from django.utils.encoding import force_bytes
 from django.utils.encoding import force_str
 
 from .forms import RegisterForm
@@ -53,7 +46,6 @@ class Register(View):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            SendVerificationEmail(request, user)
             messages.success(
                 request=request, message='Başarıyla kayıt oldunuz. Lütfen mail adresinizi doğrulayınız.'
             )
@@ -97,27 +89,6 @@ class AccountProfilePhotoUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user.profile
-
-
-class SendVerificationEmail:
-    def __init__(self, request, user):
-        self.request = request
-        self.send(user)
-
-    def send(self, user):
-        mail_subject = 'Mail Doğrulama.'
-        current_site = get_current_site(self.request)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = account_activate_token.make_token(user)
-        message = render_to_string('account/activate_account.html', {
-            'user': user, 'domain': current_site.domain,
-            'uid' : uid, 'token': token
-        }
-        )
-        email = send_mail(mail_subject, message, settings.EMAIL_HOST_USER, (user.email,),
-            fail_silently=True
-        )
-        return True if email else False
 
 
 class ActivateView(View):
