@@ -1,7 +1,6 @@
 {% autoescape off %}
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html lang="en">
+  <!doctype html>
+  <html lang="tr">
 
   <head>
     <meta charset="UTF-8">
@@ -24,7 +23,7 @@
 
       <p>Burada olduğun için çok mutluyuz, hadi mailinizi doğrulayalım:</p>
       <div class="mt-4">
-        <a href="https://{{ domain }}{% url 'account.activate' uidb64=uid token=token %}"
+        <a href="http://{{ domain }}{% url 'account.activate' uidb64=uid token=token %}"
            class="px-2 py-2 text-blue-200 bg-blue-600 rounded">Doğrulamak için tıklayınız</a>
         <p class="mt-4 text-sm">Eğer buton çalışmıyorsa:
           <span

@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 
 from .models import Profile, User
-from .utils import account_activate_token
+from .utils import account_activate_token, SendVerificationEmail
 
 
 # Create your views here.
@@ -46,6 +46,7 @@ class Register(View):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            SendVerificationEmail(request, user)
             messages.success(
                 request=request, message='Başarıyla kayıt oldunuz. Lütfen mail adresinizi doğrulayınız.'
             )
