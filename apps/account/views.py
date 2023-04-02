@@ -92,6 +92,7 @@ class AccountProfilePhotoUpdate(LoginRequiredMixin, UpdateView):
 
 
 class AccountVerify(View):
+    # todo bu sistem güvenlik açığı veriyor tekrar yazılacak
     template_name = "account/verify-information.html"
 
     def get(self, request, email):
