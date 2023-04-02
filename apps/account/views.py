@@ -27,8 +27,11 @@ class Login(LoginView):
         password = form.cleaned_data.get('password')
         user = authenticate(username=email, password=password)
         if user is not None:
-            login(self.request, user)
-            return super().form_valid(form)
+            if user.is_verified:
+                login(self.request, user)
+                return super().form_valid(form)
+            else:
+                return redirect("account.verify", email=user.email)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Email veya şifre yanlış')
@@ -44,13 +47,9 @@ class Register(View):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
             user.save()
             SendVerificationEmail(request, user)
-            messages.success(
-                request=request, message='Başarıyla kayıt oldunuz. Lütfen mail adresinizi doğrulayınız.'
-            )
-            return redirect('login')
+            return redirect('account.verify', email=user.email)
         else:
             return render(request, self.template_name, {'form': form})
 
@@ -92,6 +91,20 @@ class AccountProfilePhotoUpdate(LoginRequiredMixin, UpdateView):
         return self.request.user.profile
 
 
+class AccountVerify(View):
+    template_name = "account/verify-information.html"
+
+    def get(self, request, email):
+        if request.user.is_authenticated:
+            return redirect("home")
+        else:
+            try:
+                User.objects.get(email=email, is_verified=False)
+            except User.DoesNotExist:
+                return redirect("home")
+        return render(request, self.template_name, {"email": email})
+
+
 class ActivateView(View):
     @staticmethod
     def get(request, uidb64, token):
@@ -100,8 +113,10 @@ class ActivateView(View):
             user = User.objects.get(pk=uid)
         except (User.DoesNotExist, TypeError, ValueError, OverflowError):
             user = None
-        if user is not None and not user.is_active and account_activate_token.check_token(user=user, token=token):
-            user.is_active = True
+        if user is not None and \
+                user.is_verified is False and \
+                account_activate_token.check_token(user=user, token=token):
+            user.is_verified = True
             user.save()
             login(request=request, user=user)
             messages.info(request, 'Hesabın başarıyla doğrulandı.')
