@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.http import urlsafe_base64_decode
@@ -96,6 +97,20 @@ class AccountVerify(LoginRequiredMixin, View):
         if user.is_verified:
             return redirect("home")
         return render(request, self.template_name, {"email": user.email})
+
+
+class AccountVerifyResend(LoginRequiredMixin, View):
+
+    def get(self, request):
+        user = request.user
+        if user.is_verified:
+            return redirect("account.edit")
+        r_rs = SendVerificationEmail(self.request, user)
+        if r_rs:
+            messages.info(request, "Onaylama maili tekrar gönderildi.")
+        else:
+            messages.info(request, "Bir hata oluştu.")
+        return redirect("account.edit")
 
 
 class ActivateView(View):

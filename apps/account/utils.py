@@ -18,6 +18,8 @@ account_activate_token = TokenGenerator()
 
 
 def SendVerificationEmail(request, user):
+    if user.is_verified:
+        return False
     current_site = get_current_site(request)
     mail_subject = "Hesap Aktivasyon Maili"
     message = render_to_string("account/activate_account.html", {

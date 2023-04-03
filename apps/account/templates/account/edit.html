@@ -8,7 +8,10 @@
           <h1 class="font-semibold text-white text-xl">Kullanıcı Ayarları</h1>
         </div>
         <div class="col-span-full md:col-auto">
-          {% if not user.is_verified %}
+          {% if messages %}
+            {% include "partials/messages.html" %}
+          {% endif %}
+          {% if not user.is_verified and not messages %}
             <div class="mb-4">
               <div class="bg-sky-100 border-t-4 border-sky-500 rounded-b text-sky-900 px-4 py-3 shadow-md"
                    role="alert">
@@ -24,7 +27,7 @@
                     <p class="font-bold">Mail adresiniz doğrulanmış değil !</p>
                     <div class="flex space-x-1 text-sm">
                       <span>Lütfen doğrulayınız. Tekrar göndermek için</span>
-                      <a href="#"
+                      <a href="{% url "account.verify.resend" %}"
                          class="underline text-sky-900">tıklayınız</a>.
                     </div>
                   </div>
