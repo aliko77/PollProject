@@ -6,25 +6,25 @@ from .views import \
     CreatePollInviteLink, DeletePollInviteLink
 
 urlpatterns = [
-    path("index", ListPoll.as_view(), name="poll.index"),
-    path("create", CreatePoll.as_view(), name="poll.create"),
-    path("<int:pk>/edit", UpdatePoll.as_view(), name="poll.update"),
-    path("<int:pk>/delete", DeletePoll.as_view(), name="poll.delete"),
+    path("index/", ListPoll.as_view(), name="poll.index"),
+    path("create/", CreatePoll.as_view(), name="poll.create"),
+    path("<int:pk>/edit/", UpdatePoll.as_view(), name="poll.update"),
+    path("<int:pk>/delete/", DeletePoll.as_view(), name="poll.delete"),
     # PollQuestion"
-    path("<int:poll_id>/question/create", CreatePollQuestion.as_view(), name="poll.question.create"),
-    path("<int:poll_id>/question/<int:pk>/update", UpdatePollQuestion.as_view(), name="poll.question.update"),
-    path("<int:poll_id>/question/<int:pk>/delete", DeletePollQuestion.as_view(), name="poll.question.delete"),
+    path("<int:poll_id>/question/create/", CreatePollQuestion.as_view(), name="poll.question.create"),
+    path("<int:poll_id>/question/<int:pk>/update/", UpdatePollQuestion.as_view(), name="poll.question.update"),
+    path("<int:poll_id>/question/<int:pk>/delete/", DeletePollQuestion.as_view(), name="poll.question.delete"),
     # PollAnswer
-    path("<int:poll_id>/question/<int:question_id>/answer/create", CreatePollAnswer.as_view(),
+    path("<int:poll_id>/question/<int:question_id>/answer/create/", CreatePollAnswer.as_view(),
         name="poll.answer.create"
     ),
-    path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/update", UpdatePollAnswer.as_view(),
+    path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/update/", UpdatePollAnswer.as_view(),
         name="poll.answer.update"
     ),
-    path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/delete", DeletePollAnswer.as_view(),
+    path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/delete/", DeletePollAnswer.as_view(),
         name="poll.answer.delete"
     ),
     # Poll Invites
-    path("<int:poll_id>/invite/create", CreatePollInviteLink.as_view(), name="poll.invite"),
-    path("<int:poll_id>/invite/<int:pk>/delete", DeletePollInviteLink.as_view(), name="poll.invite.delete")
+    path("<int:poll_id>/invite/create/", CreatePollInviteLink.as_view(), name="poll.invite"),
+    path("<int:poll_id>/invite/<int:pk>/delete/", DeletePollInviteLink.as_view(), name="poll.invite.delete")
 ]

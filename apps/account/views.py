@@ -27,11 +27,8 @@ class Login(LoginView):
         password = form.cleaned_data.get('password')
         user = authenticate(username=email, password=password)
         if user is not None:
-            if user.is_verified:
-                login(self.request, user)
-                return super().form_valid(form)
-            else:
-                return redirect("account.verify", email=user.email)
+            login(self.request, user)
+            return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Email veya şifre yanlış')
@@ -91,19 +88,14 @@ class AccountProfilePhotoUpdate(LoginRequiredMixin, UpdateView):
         return self.request.user.profile
 
 
-class AccountVerify(View):
-    # todo bu sistem güvenlik açığı veriyor tekrar yazılacak
+class AccountVerify(LoginRequiredMixin, View):
     template_name = "account/verify-information.html"
 
-    def get(self, request, email):
-        if request.user.is_authenticated:
+    def get(self, request):
+        user = request.user
+        if user.is_verified:
             return redirect("home")
-        else:
-            try:
-                User.objects.get(email=email, is_verified=False)
-            except User.DoesNotExist:
-                return redirect("home")
-        return render(request, self.template_name, {"email": email})
+        return render(request, self.template_name, {"email": user.email})
 
 
 class ActivateView(View):
