@@ -124,8 +124,8 @@
 
 {% block extra_js_files %}
   <script>
-      $(".input-range").on("input", function () {
-          $(".range-value").text($(this).val());
+      $("section#vote .input-range").on("input", function () {
+          $("section#vote .range-value").text($(this).val());
       })
   </script>
 {% endblock %}

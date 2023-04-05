@@ -63,7 +63,8 @@ class VotePublicPoll(View):
             return redirect("poll.public.list")
         return render_vote_html(request, self.template_name, poll_object)
 
-    def post(self, request, **kwargs):
+    @staticmethod
+    def post(request, **kwargs):
         return SubmitPublicPoll(request).post()
 
 
@@ -77,6 +78,7 @@ class VotePublicPollWithInvite(View):
             return redirect("poll.public.list")
         return render_vote_html(request, self.template_name, poll_object)
 
+    @staticmethod
     def post(self, request, **kwargs):
         return HttpResponse(SubmitPublicPoll(request).post())
 

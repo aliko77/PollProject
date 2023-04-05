@@ -26,10 +26,10 @@
       </div>
     </div>
     <div class="flex flex-col items-center max-md:mx-4">
+      {% if messages %}
+        {% include "partials/messages.html" %}
+      {% endif %}
       <div class="border rounded bg-white max-w-2xl w-full mt-16">
-        {% if messages %}
-          {% include "partials/messages.html" %}
-        {% endif %}
         <div class="p-4">
           <div class="flex flex-1 justify-between items-center">
             <h1 class="text-2xl font-semibold">Anketlerim</h1>

@@ -64,10 +64,11 @@ class CreatePoll(LoginRequiredMixin, View):
 
 
 class UpdatePoll(LoginRequiredMixin, View):
-    template_name = "poll/update.html"
+    template_name = "poll/edit.html"
 
     def get(self, request, pk):
         poll_object = get_object_or_404(Poll, pk=pk, author=self.request.user)
+        messages.success(request, "Test")
         return render(request, self.template_name, {"poll": poll_object})
 
     def post(self, request, pk):
@@ -136,7 +137,7 @@ class CreatePollQuestion(LoginRequiredMixin, View):
 
 
 class UpdatePollQuestion(LoginRequiredMixin, View):
-    template_name = "poll/question/update.html"
+    template_name = "poll/question/edit.html"
 
     def get(self, request, pk, poll_id):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
@@ -213,7 +214,7 @@ class CreatePollAnswer(LoginRequiredMixin, View):
 
 
 class UpdatePollAnswer(LoginRequiredMixin, View):
-    template_name = "poll/answer/update.html"
+    template_name = "poll/answer/edit.html"
 
     def get(self, request, poll_id, question_id, pk):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
@@ -258,7 +259,7 @@ class DeletePollAnswer(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class CreatePollInviteLink(LoginRequiredMixin, View):
-    template_name = "poll/update.html"
+    template_name = "poll/edit.html"
 
     def post(self, request, poll_id):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)

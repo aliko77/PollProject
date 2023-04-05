@@ -41,6 +41,12 @@
       </div>
     </div>
     <div class="flex flex-col items-center mx-10 my-12 space-y-4">
+      {% if form.errors %}
+        {% include "partials/form_errors.html" %}
+      {% endif %}
+      {% if messages %}
+        {% include "partials/messages.html" %}
+      {% endif %}
       <div class="bg-white border rounded max-w-2xl w-full">
         <div class="p-4 sm:flex items-center justify-between">
           <h1 class="font-semibold text-xl tracking-wider">{{ poll.id }} Numaralı Anket</h1>
@@ -50,12 +56,6 @@
           </div>
         </div>
         <hr>
-        {% if form.errors %}
-          {% include "partials/form_errors.html" %}
-        {% endif %}
-        {% if messages %}
-          {% include "partials/messages.html" %}
-        {% endif %}
         <div class="p-4">
           <form method="post">
             {% csrf_token %}
@@ -143,7 +143,8 @@
           {% for pollinvitelink in poll.pollinvitelinks_set.all %}
             <div class="flex items-center space-x-2">
               <div class="grid grid-cols-3 items-center w-full">
-                <a href="{% url "poll.public.vote.invite" invite_link=pollinvitelink.link %}" class="text-gray-900 underline hover:text-orange-500">/anketler/i/{{ pollinvitelink.link }}</a>
+                <a href="{% url "poll.public.vote.invite" invite_link=pollinvitelink.link %}"
+                   class="text-gray-900 underline hover:text-orange-500">/anketler/i/{{ pollinvitelink.link }}</a>
                 <span
                   class="text-gray-500 text-sm">{{ pollinvitelink.author.name|default_if_none:pollinvitelink.author }}</span>
                 <span class="text-gray-500 text-sm">{{ pollinvitelink.created_at }}</span>
