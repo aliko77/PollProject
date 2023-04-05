@@ -88,7 +88,7 @@
                      class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
                      placeholder="Meta">
             </div>
-            <div class="mb-4 flex items-center h-5">
+            <div class="mb-4 flex items-center h-5 space-x-2">
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="hidden" name="is_active" value="off"/>
                 <input type="checkbox" value="on" name="is_active" class="sr-only peer"
@@ -96,6 +96,14 @@
                 <div
                   class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
                 <span class="ml-3 text-sm font-medium text-gray-900">Soru aktif mi ?</span>
+              </label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="hidden" name="is_required" value="off"/>
+                <input type="checkbox" value="on" name="is_required" class="sr-only peer"
+                  {% if question.is_required %} checked {% endif %}>
+                <div
+                  class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <span class="ml-3 text-sm font-medium text-gray-900">Soru Zorunlu mu ?</span>
               </label>
             </div>
             <button type="submit"

@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'apps.poll',
     'apps.account',
-    'apps.public_poll'
+    'apps.public_poll',
+    'apps.poll.templatetags.filters'
 ]
 
 MIDDLEWARE = [
@@ -130,7 +131,7 @@ TAILWIND_APP_NAME = "theme"
 
 # Tailwind npm bin path
 
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Accounts Urls
 

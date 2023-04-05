@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
 from django.db.models import Q
-from apps.poll.models import Poll, PollInviteLinks
+from apps.poll.models import Poll, PollInviteLinks, PollVote
 from django.http import HttpResponse
 
 
@@ -20,8 +20,7 @@ def ispollready(poll, invite_link=None):
             if not is_exist:
                 return False
     questions = poll.pollquestion_set.filter(is_active=True)
-    answers = poll.pollanswer_set.filter(is_active=True)
-    if questions.count() == 0 or answers.count() == 0:
+    if questions.count() == 0:
         return False
     return True
 
@@ -79,7 +78,7 @@ class VotePublicPollWithInvite(View):
         return render_vote_html(request, self.template_name, poll_object)
 
     @staticmethod
-    def post(self, request, **kwargs):
+    def post(request, **kwargs):
         return HttpResponse(SubmitPublicPoll(request).post())
 
 
@@ -88,8 +87,21 @@ class SubmitPublicPoll:
         self.request = request
 
     def post(self):
-        args = self.request.POST
-        poll_object = get_object_or_404(Poll, id=args.get("poll_identy"))
+        items = self.request.POST
+        lists = self.request.POST.lists()
+        item_poll_identy = items.get("poll_identy")
+        poll_object = get_object_or_404(Poll, id=item_poll_identy)
         if not ispollready(poll_object):
             return redirect("poll.public.list")
-        return poll_object
+        for key, values in lists:
+            if key.startswith("Q_"):
+                question_id = key.rsplit("_", 1)[-1]
+                uv = PollVote(
+                    user=self.request.user,
+                    poll=poll_object,
+                    question_id=question_id,
+                    answer_id=None,
+                    content=values if len(values) > 1 else values[0]
+                )
+                uv.save()
+        return HttpResponse(items)

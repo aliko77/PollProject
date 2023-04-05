@@ -68,7 +68,6 @@ class UpdatePoll(LoginRequiredMixin, View):
 
     def get(self, request, pk):
         poll_object = get_object_or_404(Poll, pk=pk, author=self.request.user)
-        messages.success(request, "Test")
         return render(request, self.template_name, {"poll": poll_object})
 
     def post(self, request, pk):
@@ -127,6 +126,7 @@ class CreatePollQuestion(LoginRequiredMixin, View):
                 content=request.POST.get("content"),
                 meta=request.POST.get("meta"),
                 is_active=True if request.POST.get("is_active") == "on" else False,
+                is_required=True if request.POST.get("is_required") == "on" else False,
                 poll=poll_object
             )
             cpq.save()
@@ -158,6 +158,7 @@ class UpdatePollQuestion(LoginRequiredMixin, View):
             question_object.meta = request.POST.get("meta")
             question_object.type = request.POST.get("type")
             question_object.is_active = True if request.POST.get("is_active") == "on" else False
+            question_object.is_required = True if request.POST.get("is_required") == "on" else False
             question_object.save()
             messages.success(request, "Başarıyla düzenlendi.")
         except ValueError:
