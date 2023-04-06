@@ -6,6 +6,8 @@ from django.db.models import Q
 from apps.poll.models import Poll, PollInviteLinks, PollVote
 from django.http import HttpResponse
 
+from .models import PollResolved
+
 
 # Create your views here.
 
@@ -27,12 +29,12 @@ def ispollready(poll, invite_link=None):
 
 def render_vote_html(request, template_name, poll_object):
     return render(request, template_name,
-        {
-            "poll"     : poll_object,
-            "questions": poll_object.pollquestion_set.order_by("id"),
-            "cho_list" : ("text", "number", "date", "email", "time")
-        }
-    )
+                  {
+                      "poll": poll_object,
+                      "questions": poll_object.pollquestion_set.order_by("id"),
+                      "cho_list": ("text", "number", "date", "email", "time")
+                  }
+                  )
 
 
 class ListPublicPoll(ListView):
@@ -40,6 +42,11 @@ class ListPublicPoll(ListView):
     template_name = "public_poll/list.html"
     context_object_name = 'polls'
     queryset = Poll.objects.filter(is_active=True, is_private=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["resolved_list"] = PollResolved.objects.filter(user=self.request.user).values_list("poll_id", flat=True)
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -96,12 +103,15 @@ class SubmitPublicPoll:
         for key, values in lists:
             if key.startswith("Q_"):
                 question_id = key.rsplit("_", 1)[-1]
-                uv = PollVote(
+                PollVote(
                     user=self.request.user,
                     poll=poll_object,
                     question_id=question_id,
                     answer_id=None,
                     content=values if len(values) > 1 else values[0]
-                )
-                uv.save()
-        return HttpResponse(items)
+                ).save()
+        PollResolved(
+            user=self.request.user,
+            poll=poll_object
+        ).save()
+        return HttpResponse(True)
