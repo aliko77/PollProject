@@ -31,63 +31,51 @@
                         <h1 class="font-semibold text-2xl text-red-800">Kamusal Anketler</h1>
                     </div>
                     <hr class="my-4">
+                    {% if resolved_list|length > 0 %}
+                        {% with rl_l=resolved_list|length %}
+                            <div class="mb-2">
+                                <span class="text-gray-400 text-sm">
+                                    * Liste dışı, çözülmüş {{ rl_l }} anket var.
+                                </span>
+                            </div>
+                        {% endwith %}
+                    {% endif %}
                     {% if polls|length == 0 %}
+                        <hr>
                         <div>
                             {% if request.GET.search|default:"None" == "None" %}
                                 <span class="text-gray-400">Herhangi bir anket bulunamadı.</span>
                             {% else %}
                                 <span
-                                        class="text-gray-400">[{{ request.GET.search }}] ile Alakalı herhangi bir sonuç bulunamadı...</span>
+                                        class="text-gray-400">[{{ request.GET.search }}] ile alakalı herhangi bir sonuç bulunamadı...</span>
                             {% endif %}
                         </div>
                     {% endif %}
                     {% for poll in polls %}
-                        {% if poll.id in resolved_list %}
-                            <div title="Bu anketi daha önce çözdün.">
-                                <div class="border rounded px-4 py-3 bg-gray-200 flex space-x-2 items-center">
-                                    <div class="grid grid-cols-3 items-center w-full">
-                                        <span class="truncate text-lg">{{ poll.title }}</span>
-                                        <span class="text-sm text-gray-400 truncate">Anketör: {{ poll.author.name }}</span>
-                                        <span class="text-sm text-gray-400 truncate">{{ poll.created_at|date }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-400 truncate">S.S: {{ poll.pollquestion_set.count }}</span>
-                                    </div>
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke-width="1.5"
-                                             stroke="currentColor" class="w-5 h-5 stroke-red-600">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
-                                        </svg>
-                                    </div>
+                        <a href="{% url "poll.public.vote" poll_slug=poll.slug %}">
+                            <div class="border rounded px-4 py-3 hover:bg-gray-200 flex space-x-2 items-center">
+                                <div class="grid grid-cols-3 items-center w-full">
+                                        <span class="truncate font-medium"
+                                              title="{{ poll.title }}">{{ poll.title }}</span>
+                                    <span class="text-sm text-gray-400 truncate"
+                                          title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
+                                    <span class="text-sm text-gray-400 truncate"
+                                          title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
                                 </div>
-                            </div>
-                        {% else %}
-                            <a href="{% url "poll.public.vote" poll_slug=poll.slug %}">
-                                <div class="border rounded px-4 py-3 hover:bg-gray-200 flex space-x-2 items-center">
-                                    <div class="grid grid-cols-3 items-center w-full">
-                                        <span class="truncate text-lg" title="{{ poll.title }}">{{ poll.title }}</span>
-                                        <span class="text-sm text-gray-400 truncate"
-                                              title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
-                                        <span class="text-sm text-gray-400 truncate"
-                                              title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
-                                    </div>
-                                    <div>
+                                <div>
                                     <span class="text-sm text-gray-400 truncate"
                                           title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span>
-                                    </div>
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                             stroke-width="1.5"
-                                             stroke="currentColor" class="w-5 h-5 stroke-red-600">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
-                                        </svg>
-                                    </div>
                                 </div>
-                            </a>
-                        {% endif %}
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5"
+                                         stroke="currentColor" class="w-5 h-5 stroke-red-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
                     {% endfor %}
                 </div>
             </div>
