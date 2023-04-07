@@ -837,6 +837,11 @@ select {
   margin-bottom: 1rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -891,10 +896,6 @@ select {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
 }
 
 .block {
@@ -1009,6 +1010,10 @@ select {
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flex-row {
+  flex-direction: row;
 }
 
 .flex-col {
@@ -1619,6 +1624,12 @@ select {
   content: var(--tw-content);
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.after\:bg-sky-100::after {
+  content: var(--tw-content);
+  --tw-bg-opacity: 1;
+  background-color: rgb(224 242 254 / var(--tw-bg-opacity));
 }
 
 .after\:transition-all::after {

@@ -15,7 +15,7 @@ class Poll(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
     )
     title = models.CharField(max_length=255)
     slug = models.SlugField(editable=False, null=True, blank=True, unique=True, db_index=True)

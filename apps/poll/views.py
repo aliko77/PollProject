@@ -29,6 +29,11 @@ class CreatePoll(LoginRequiredMixin, View):
     template_name = "poll/create.html"
 
     def post(self, request):
+        if Poll.objects.filter(author=request.user).count() >= 10:
+            messages.error(
+                request=request, message='Anket oluşturma limitini doldurdunuz.'
+            )
+            return render(request, self.template_name)
         form = CreatePollForm(request.POST)
         if not form.is_valid():
             messages.error(
@@ -111,8 +116,8 @@ class CreatePollQuestion(LoginRequiredMixin, View):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
         questions = poll_object.pollquestion_set.all()
         return render(request, self.template_name,
-            {"questions": questions, "poll": poll_object, "type_choices": PollQuestionChoices.get_choices()}
-        )
+                      {"questions": questions, "poll": poll_object, "type_choices": PollQuestionChoices.get_choices()}
+                      )
 
     def post(self, request, poll_id):
         form = CreatePollQuestionForm(request.POST)
@@ -143,8 +148,8 @@ class UpdatePollQuestion(LoginRequiredMixin, View):
         poll_object = get_object_or_404(Poll, pk=poll_id, author=self.request.user)
         question_object = get_object_or_404(PollQuestion, pk=pk, poll_id=poll_object.id)
         return render(request, self.template_name,
-            {"question": question_object, "type_choices": PollQuestionChoices.get_choices()}
-        )
+                      {"question": question_object, "type_choices": PollQuestionChoices.get_choices()}
+                      )
 
     def post(self, request, pk, poll_id):
         form = CreatePollQuestionForm(request.POST)
@@ -255,8 +260,8 @@ class DeletePollAnswer(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('poll.answer.create',
-            kwargs={"poll_id": self.object.poll.id, "question_id": self.object.question.id}
-        )
+                            kwargs={"poll_id": self.object.poll.id, "question_id": self.object.question.id}
+                            )
 
 
 class CreatePollInviteLink(LoginRequiredMixin, View):
@@ -297,5 +302,5 @@ class DeletePollInviteLink(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('poll.update',
-            kwargs={"pk": self.object.poll.id}
-        )
+                            kwargs={"pk": self.object.poll.id}
+                            )

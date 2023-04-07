@@ -30,24 +30,24 @@
                     <div class="text-center">
                         <h1 class="font-semibold text-2xl text-red-800">Kamusal Anketler</h1>
                     </div>
-                    <hr class="my-4">
+                    <hr class="my-2">
                     {% if resolved_list|length > 0 %}
                         {% with rl_l=resolved_list|length %}
-                            <div class="mb-2">
-                                <span class="text-gray-400 text-sm">
+                            <div>
+                                <span class="text-gray-500 text-xs">
                                     * Liste dışı, çözülmüş {{ rl_l }} anket var.
                                 </span>
                             </div>
                         {% endwith %}
                     {% endif %}
+                    <hr class="my-2">
                     {% if polls|length == 0 %}
-                        <hr>
                         <div>
                             {% if request.GET.search|default:"None" == "None" %}
-                                <span class="text-gray-400">Herhangi bir anket bulunamadı.</span>
+                                <span class="text-gray-500 text-sm">Herhangi bir anket bulunamadı.</span>
                             {% else %}
                                 <span
-                                        class="text-gray-400">[{{ request.GET.search }}] ile alakalı herhangi bir sonuç bulunamadı...</span>
+                                        class="text-gray-500 text-sm">[{{ request.GET.search }}] ile alakalı herhangi bir sonuç bulunamadı...</span>
                             {% endif %}
                         </div>
                     {% endif %}
@@ -57,13 +57,13 @@
                                 <div class="grid grid-cols-3 items-center w-full">
                                         <span class="truncate font-medium"
                                               title="{{ poll.title }}">{{ poll.title }}</span>
-                                    <span class="text-sm text-gray-400 truncate"
+                                    <span class="text-sm text-gray-500 truncate"
                                           title="{{ poll.author.name }}">Anketör: {{ poll.author.name }}</span>
-                                    <span class="text-sm text-gray-400 truncate"
+                                    <span class="text-sm text-gray-500 truncate"
                                           title="{{ poll.created_at|date }}">{{ poll.created_at|date }}</span>
                                 </div>
                                 <div>
-                                    <span class="text-sm text-gray-400 truncate"
+                                    <span class="text-sm text-gray-500 truncate"
                                           title="Soru sayısı">S.S: {{ poll.pollquestion_set.count }}</span>
                                 </div>
                                 <div>

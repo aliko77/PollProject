@@ -1,134 +1,139 @@
 {% extends "base.html" %}
 {% block content %}
-  <section id="createAnswer">
-    <div class="absolute flex right-0 space-x-4 px-4">
-      <div>
-        <a href="{% url "poll.question.update" pk=question.id poll_id=question.poll.id %}" title="Geri dön"
-           class="flex bg-white rounded-b-full px-3 p-1.5 hover:py-3 transition-[padding] shadow">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
-               class="w-5 h-5 stroke-orange-800">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="flex flex-col items-center my-10 mx-12 space-y-4">
-      {% if form.errors %}
-        {% include "partials/form_errors.html" %}
-      {% endif %}
-      {% if messages %}
-        {% include "partials/messages.html" %}
-      {% endif %}
-      <div class="bg-white border rounded max-w-2xl w-full">
-        <div class="p-4 sm:flex items-center justify-between">
-          <h1 class="font-semibold text-xl tracking-wider">Cevap Seçeneği Ekle</h1>
-          <div class="flex flex-col text-xs text-gray-500">
-            <span>Soru: <span class="float-right ml-1">{{ question.content }} [{{ question.id }}]</span></span>
-            <span>Anket: <span
-              class="float-right ml-1">{{ question.poll.title }} [{{ question.poll.id }}] </span></span>
-          </div>
-        </div>
-        <hr>
-        <div class="p-4">
-          <form method="post" action="{% url "poll.answer.create" question_id=question.id poll_id=question.poll.id %}">
-            {% csrf_token %}
-            <div class="mb-4">
-              <label for="content" class="block mb-2 text-sm font-medium text-gray-900">Cevap
-                İçeriği</label>
-              <input type="text" id="content" name="content"
-                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                     placeholder="Cevap" required>
-            </div>
-            <div class="mb-4">
-              <label for="meta" class="block mb-2 text-sm font-medium text-gray-900">Meta</label>
-              <input type="text" id="meta" name="meta"
-                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                     placeholder="Meta">
-            </div>
-            <div class="mb-4 flex items-center h-5">
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="hidden" name="is_active" value="off"/>
-                <input type="checkbox" value="on" name="is_active" checked class="sr-only peer">
-                <div
-                  class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-                <span class="ml-3 text-sm font-medium text-gray-900">Cevap aktif mi ?</span>
-              </label>
-            </div>
-            <button type="submit"
-                    class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-              Cevabı Ekle
-            </button>
-          </form>
-        </div>
-      </div>
-      <div class="bg-white border rounded max-w-2xl w-full">
-        <div class="p-4 flex items-center justify-between">
-          <h1 class="font-semibold text-xl tracking-wider">[{{ question.id }}] Soru Cevapları</h1>
-        </div>
-        <hr>
-        <div class="p-4 overflow-x-auto">
-          <table class="w-full text-sm text-left mb-2.5">
-            <thead class="text-xs text-gray-700 uppercase">
-            <tr>
-              <th scope="col" class="px-6 py-3">
-                Cevap
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Meta
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Durum
-              </th>
-              <th scope="col" class="px-6 py-3 text-right">
-                Ekstra
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for answer in answers %}
-              <tr class="bg-slate-100">
-                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                  <a href="{% url "poll.answer.update" pk=answer.id question_id=question.id poll_id=question.poll.id %}"
-                     class="flex items-center space-x-1 hover:text-orange-500 hover:stroke-orange-500">
+    <section id="createAnswer">
+        <div class="absolute flex right-0 space-x-4 px-4">
+            <div>
+                <a href="{% url "poll.question.update" pk=question.id poll_id=question.poll.id %}" title="Geri dön"
+                   class="flex bg-white rounded-b-full px-3 p-1.5 hover:py-3 transition-[padding] shadow">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"></path>
+                         stroke="currentColor"
+                         class="w-5 h-5 stroke-orange-800">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path>
                     </svg>
-                    <h1>{{ answer.content }}</h1>
-                  </a>
-                </th>
-                <td class="px-6 py-4">
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-col items-center my-10 mx-12 space-y-4">
+            {% if form.errors %}
+                {% include "partials/form_errors.html" %}
+            {% endif %}
+            {% if messages %}
+                {% include "partials/messages.html" %}
+            {% endif %}
+            <div class="bg-white border rounded max-w-2xl w-full">
+                <div class="p-4 sm:flex items-center justify-between">
+                    <h1 class="font-semibold text-xl tracking-wider">Cevap Seçeneği Ekle</h1>
+                    <div class="flex flex-col text-xs text-gray-500">
+                        <span>Soru: <span
+                                class="float-right ml-1">{{ question.content }} [{{ question.id }}]</span></span>
+                        <span>Anket: <span
+                                class="float-right ml-1">{{ question.poll.title }} [{{ question.poll.id }}] </span></span>
+                    </div>
+                </div>
+                <hr>
+                <div class="p-4">
+                    <form method="post"
+                          action="{% url "poll.answer.create" question_id=question.id poll_id=question.poll.id %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="content" class="block mb-2 text-sm font-medium text-gray-900">Cevap
+                                İçeriği</label>
+                            <input type="text" id="content" name="content"
+                                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                                   placeholder="Cevap" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="meta" class="block mb-2 text-sm font-medium text-gray-900">Meta</label>
+                            <input type="text" id="meta" name="meta"
+                                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                                   placeholder="Meta">
+                        </div>
+                        <div class="mb-4 flex items-center h-5">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="hidden" name="is_active" value="off"/>
+                                <input type="checkbox" value="on" name="is_active" checked class="sr-only peer">
+                                <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                <span class="ml-3 text-sm font-medium text-gray-900">Cevap aktif mi ?</span>
+                            </label>
+                        </div>
+                        <button type="submit"
+                                class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Cevabı Ekle
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="bg-white border rounded max-w-2xl w-full">
+                <div class="p-4 flex items-center justify-between">
+                    <h1 class="font-semibold text-xl tracking-wider">[{{ question.id }}] Soru Cevapları</h1>
+                </div>
+                <hr>
+                <div class="p-4 overflow-x-auto">
+                    <table class="w-full text-sm text-left mb-2.5">
+                        <thead class="text-xs text-gray-700 uppercase">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Cevap
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Meta
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Durum
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right">
+                                Ekstra
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for answer in answers %}
+                            <tr class="bg-slate-100">
+                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                    <a href="{% url "poll.answer.update" pk=answer.id question_id=question.id poll_id=question.poll.id %}"
+                                       class="flex items-center space-x-1 hover:text-orange-500 hover:stroke-orange-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"></path>
+                                        </svg>
+                                        <h1>{{ answer.content }}</h1>
+                                    </a>
+                                </th>
+                                <td class="px-6 py-4">
                   <span>
                     {{ answer.meta }}
                   </span>
-                </td>
-                <td class="px-6 py-4">
+                                </td>
+                                <td class="px-6 py-4">
                   <span>
                     {% if answer.is_active %}
-                      Aktif
+                        Aktif
                     {% else %}
-                      Deaktif
+                        Deaktif
                     {% endif %}
                   </span>
-                </td>
-                <td class="px-6 py-4 flex space-x-1 justify-end">
-                  <a href="{% url "poll.answer.update" pk=answer.id question_id=question.id poll_id=question.poll.id %}"
-                     aria-label="Düzenle">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor" class="w-5 h-5 hover:stroke-orange-500">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
-                    </svg>
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+                                </td>
+                                <td class="px-6 py-4 flex space-x-1 justify-end">
+                                    <a href="{% url "poll.answer.update" pk=answer.id question_id=question.id poll_id=question.poll.id %}"
+                                       aria-label="Düzenle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5"
+                                             stroke="currentColor" class="w-5 h-5 hover:stroke-orange-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 {% endblock %}
