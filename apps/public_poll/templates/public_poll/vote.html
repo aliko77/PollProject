@@ -1,136 +1,135 @@
 {% extends "base.html" %}
 {% block content %}
-    {% load filters %}
-    <section id="vote" class="bg-no-repeat bg-cover bg-center"
-             style='background-image:url("/static/images/background-.jpg")'>
-        <div class="flex justify-center z-10">
-            <div class="border p-4 rounded bg-white m-10 max-w-3xl w-full space-y-2">
-                <div class="block sm:flex sm:space-x-4 items-center justify-between">
-                    <h1 class="text-xl font-medium">{{ poll.title|title }}</h1>
-                    <div class="space-x-2 items-center text-gray-500 text-sm">
-                        <span>Oluşturan: {{ poll.author.name|default_if_none:poll.author.email }}</span>
-                        <span>|</span>
-                        <span>{{ poll.created_at|date }}</span>
-                    </div>
-                </div>
-                <div class="text-sm text-gray-500">Anket Hakkında: {{ poll.description }}</div>
-                <hr>
-                <div class="flex space-x-4 items-center justify-between text-gray-500 text-xs">
-                    {% if poll.is_private %}
-                        <span>Anket Durumu: Özel</span>
-                    {% else %}
-                        <span>Anket Durumu: Halka açık</span>
-                    {% endif %}
-                </div>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="poll_identy" value="{{ poll.id }}">
-                    <div id="questions" class="space-y-2">
-                        <div class="mt-8 mb-4 space-y-8">
-                            {% for question in questions %}
-                                <div>
-                                    <div class="flex space-x-2 items-center question">
-                                        <div
-                                                class="relative w-4 h-4 border border-gray-300 rounded-full flex justify-center items-center text-center shadow p-3.5">
-                                            <span>{{ forloop.counter }}</span>
-                                        </div>
-                                        <label for="{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                               class="text-base font-medium">{{ question.content|title }}</label>
-                                    </div>
-                                    <div id="answers" class="ml-10 mt-2">
-                                        {% if question.get_type_display|slugify_unicode in cho_list %}
-                                            <input type="{{ question.get_type_display|slugify_unicode }}"
-                                                    {% if question.is_required %} required {% endif %}
-                                                   name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                   id="{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-orange-500 block w-full max-w-xl p-2.5"
-                                                   placeholder="{{ question.content|title }}">
-                                        {% elif question.get_type_display|slugify_unicode == "range" %}
-                                            <div class="flex justify-between text-gray-500 text-sm max-w-xl">
-                                                <span>{{ question.get_meta_data.min|default:0 }}</span>
-                                                <span>{{ question.get_meta_data.max|default:100 }}</span>
-                                            </div>
-                                            <input type="range"
-                                                    {% if question.is_required %} required {% endif %}
-                                                   name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                   min="{{ question.get_meta_data.min|default:0 }}"
-                                                   max="{{ question.get_meta_data.max|default:100 }}"
-                                                   value="0"
-                                                   id="{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                   class="input-range w-full max-w-xl h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-                                            <div>
-                                                <span class="text-sm text-gray-500">Değer: <span
-                                                        class="range-value">0</span></span>
-                                            </div>
-                                        {% elif question.get_type_display|slugify_unicode == "checkbox" and question.pollanswer_set.all|length > 0 %}
-                                            <div class="flex flex-col space-y-1">
-                                                {% for answer in question.pollanswer_set.all %}
-                                                    <div class="flex space-x-1 items-center">
-                                                        <input id="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
-                                                               type="checkbox"
-                                                                {% if question.is_required %} required {% endif %}
-                                                               value="{{ answer.content|slugify_unicode }}"
-                                                               name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                               class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2">
-                                                        <label for="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
-                                                               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content|title }}</label>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        {% elif question.get_type_display|slugify_unicode == "radio" and question.pollanswer_set.all|length > 0 %}
-                                            <div class="flex flex-col space-y-1">
-                                                {% for answer in question.pollanswer_set.all %}
-                                                    <div class="flex items-center">
-                                                        <input id="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
-                                                               type="radio"
-                                                                {% if question.is_required %} required {% endif %}
-                                                               value="{{ answer.content|slugify_unicode }}"
-                                                               name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
-                                                               class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 focus:ring-2">
-                                                        <label for="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
-                                                               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content|title }}</label>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            <div class="space-y-2">
-                                <hr>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <input id="term-conditions" type="checkbox" value="Confirm"
-                                               name="term-conditions"
-                                               required
-                                               class="w-4 h-4 text-sky-600 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 focus:ring-2">
-                                        <label for="term-conditions" class="ml-2 text-sm font-medium text-gray-900">
-                                            <a href="#"
-                                               class="text-sky-700 hover:underline">Şartlar ve Koşulları</a> kabul
-                                            ediyorum.
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <span class="text-gray-500 text-xs">{% now "SHORT_DATETIME_FORMAT" %}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-end">
-                        <button class="bg-sky-600 rounded py-2 px-8 text-white hover:bg-sky-700" type="submit">Gönder
-                        </button>
-                    </div>
-                </form>
-            </div>
+  {% load filters %}
+  <section id="vote" class="bg-no-repeat bg-cover bg-center">
+    <div class="flex justify-center z-10">
+      <div class="border p-4 rounded bg-white m-10 max-w-3xl w-full space-y-2">
+        <div class="block sm:flex sm:space-x-4 items-center justify-between">
+          <h1 class="text-xl font-medium">{{ poll.title|title }}</h1>
+          <div class="space-x-2 items-center text-gray-500 text-sm">
+            <span>Oluşturan: {{ poll.author.name|default_if_none:poll.author.email }}</span>
+            <span>|</span>
+            <span>{{ poll.created_at|date }}</span>
+          </div>
         </div>
-    </section>
+        <div class="text-sm text-gray-500">Anket Hakkında: {{ poll.description }}</div>
+        <hr>
+        <div class="flex space-x-4 items-center justify-between text-gray-500 text-xs">
+          {% if poll.is_private %}
+            <span>Anket Durumu: Özel</span>
+          {% else %}
+            <span>Anket Durumu: Halka açık</span>
+          {% endif %}
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="poll_identy" value="{{ poll.id }}">
+          <div id="questions" class="space-y-2">
+            <div class="mt-8 mb-4 space-y-8">
+              {% for question in questions %}
+                <div>
+                  <div class="flex space-x-2 items-center question">
+                    <div
+                        class="relative w-4 h-4 border border-gray-300 rounded-full flex justify-center items-center text-center shadow p-3.5">
+                      <span>{{ forloop.counter }}</span>
+                    </div>
+                    <label for="{{ question.content|slugify_unicode }}_{{ question.id }}"
+                           class="text-base font-medium">{{ question.content|title }}</label>
+                  </div>
+                  <div id="answers" class="ml-10 mt-2">
+                    {% if question.get_type_display|slugify_unicode in cho_list %}
+                      <input type="{{ question.get_type_display|slugify_unicode }}"
+                          {% if question.is_required %} required {% endif %}
+                             name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
+                             id="{{ question.content|slugify_unicode }}_{{ question.id }}"
+                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-0 focus:border-orange-500 block w-full max-w-xl p-2.5"
+                             placeholder="{{ question.content|title }}">
+                    {% elif question.get_type_display|slugify_unicode == "range" %}
+                      <div class="flex justify-between text-gray-500 text-sm max-w-xl">
+                        <span>{{ question.get_meta_data.min|default:0 }}</span>
+                        <span>{{ question.get_meta_data.max|default:100 }}</span>
+                      </div>
+                      <input type="range"
+                          {% if question.is_required %} required {% endif %}
+                             name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
+                             min="{{ question.get_meta_data.min|default:0 }}"
+                             max="{{ question.get_meta_data.max|default:100 }}"
+                             value="0"
+                             id="{{ question.content|slugify_unicode }}_{{ question.id }}"
+                             class="input-range w-full max-w-xl h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                      <div>
+<span class="text-sm text-gray-500">Değer: <span
+    class="range-value">0</span></span>
+                      </div>
+                    {% elif question.get_type_display|slugify_unicode == "checkbox" and question.pollanswer_set.all|length > 0 %}
+                      <div class="flex flex-col space-y-1">
+                        {% for answer in question.pollanswer_set.all %}
+                          <div class="flex space-x-1 items-center">
+                            <input id="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
+                                   type="checkbox"
+                                {% if question.is_required %} required {% endif %}
+                                   value="{{ answer.content|slugify_unicode }}"
+                                   name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
+                                   class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2">
+                            <label for="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
+                                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content|title }}</label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% elif question.get_type_display|slugify_unicode == "radio" and question.pollanswer_set.all|length > 0 %}
+                      <div class="flex flex-col space-y-1">
+                        {% for answer in question.pollanswer_set.all %}
+                          <div class="flex items-center">
+                            <input id="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
+                                   type="radio"
+                                {% if question.is_required %} required {% endif %}
+                                   value="{{ answer.content|slugify_unicode }}"
+                                   name="Q_{{ question.content|slugify_unicode }}_{{ question.id }}"
+                                   class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 focus:ring-2">
+                            <label for="{{ answer.content|slugify_unicode }}_{{ forloop.counter }}"
+                                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ answer.content|title }}</label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+              <div class="space-y-2">
+                <hr>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <input id="term-conditions" type="checkbox" value="Confirm"
+                           name="term-conditions"
+                           required
+                           class="w-4 h-4 text-sky-600 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 focus:ring-2">
+                    <label for="term-conditions" class="ml-2 text-sm font-medium text-gray-900">
+                      <a href="#"
+                         class="text-sky-700 hover:underline">Şartlar ve Koşulları</a> kabul
+                      ediyorum.
+                    </label>
+                  </div>
+                  <div>
+                    <span class="text-gray-500 text-xs">{% now "SHORT_DATETIME_FORMAT" %}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button class="bg-sky-600 rounded py-2 px-8 text-white hover:bg-sky-700" type="submit">Gönder
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 {% endblock %}
 
 {% block extra_js_files %}
-    <script>
-        $("section#vote .input-range").on("input", function () {
-            $("section#vote .range-value").text($(this).val());
-        })
-    </script>
+  <script>
+      $("section#vote .input-range").on("input", function () {
+          $("section#vote .range-value").text($(this).val());
+      })
+  </script>
 {% endblock %}

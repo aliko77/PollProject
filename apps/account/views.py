@@ -1,17 +1,15 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.contrib import messages
 from django.views.generic import UpdateView
-from django.utils.encoding import force_str
 
 from .forms import RegisterForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import LoginView
-
 from .models import Profile, User
 from .utils import account_activate_token, SendVerificationEmail
 

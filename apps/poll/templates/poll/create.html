@@ -1,83 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
-    <section id="createPoll">
-        <div class="absolute flex right-0 space-x-4 px-4">
-            <div>
-                <a href="{% url "poll.index" %}" title="Geri dön"
-                   class="flex bg-white rounded-b-full px-3 p-1.5 hover:py-3 transition-[padding] shadow">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor"
-                         class="w-5 h-5 stroke-orange-800">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path>
-                    </svg>
-                </a>
-            </div>
+  <section id="createPoll">
+    <div class="absolute flex right-0 space-x-4 px-4">
+      <div>
+        <a href="{% url "poll.index" %}" title="Geri dön"
+           class="flex bg-white rounded-b-full px-3 p-1.5 hover:py-3 transition-[padding] shadow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+               stroke="currentColor"
+               class="w-5 h-5 stroke-orange-800">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="flex flex-col items-center my-10 mx-12 space-y-4">
+      {% if form.errors %}
+        {% include "partials/form_errors.html" %}
+      {% endif %}
+      {% if messages %}
+        {% include "partials/messages.html" %}
+      {% endif %}
+      <div class="bg-white border rounded max-w-2xl w-full">
+        <div class="p-4 flex items-center justify-between">
+          <h1 class="font-semibold text-xl tracking-wider">Anket Oluştur</h1>
+          <span class="text-sm text-gray-500">{% now "d / F / Y" %}</span>
         </div>
-        <div class="flex flex-col items-center my-10 mx-12 space-y-4">
-            {% if form.errors %}
-                {% include "partials/form_errors.html" %}
-            {% endif %}
-            {% if messages %}
-                {% include "partials/messages.html" %}
-            {% endif %}
-            <div class="bg-white border rounded max-w-2xl w-full">
-                <div class="p-4 flex items-center justify-between">
-                    <h1 class="font-semibold text-xl tracking-wider">Anket Oluştur</h1>
-                    <span class="text-sm text-gray-500">{% now "d / F / Y" %}</span>
-                </div>
-                <hr>
-                <div class="p-4">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-4">
-                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Başlık</label>
-                            <input type="text" id="title" name="title"
-                                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                                   placeholder="Başlık" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="description"
-                                   class="block mb-2 text-sm font-medium text-gray-900">Açıklama</label>
-                            <textarea type="text" id="description"
-                                      name="description"
-                                      class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                                      placeholder="Açıklama"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="tags"
-                                   class="block mb-2 text-sm font-medium text-gray-900">Etiketler</label>
-                            <textarea id="tags"
-                                      name="tags"
-                                      class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
-                                      placeholder="Etiketler"></textarea>
-                            <span
-                                    class="text-xs text-gray-500">*Virgül ile ayırarak yazınız.</span>
-                        </div>
-                        <div class="flex items-center h-5 mb-4 space-x-2">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="hidden" name="is_active" value="off"/>
-                                <input type="checkbox" value="on" name="is_active" checked class="sr-only peer">
-                                <div
-                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-                                <span class="ml-3 text-sm font-medium text-gray-900">Anket aktif mi ?</span>
-                            </label>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="hidden" name="is_private" value="off"/>
-                                <input type="checkbox" value="on" name="is_private" class="sr-only peer">
-                                <div
-                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-                                <span class="ml-3 text-sm font-medium text-gray-900">Anket özel mi ? <span
-                                        class="text-xs text-gray-500">(Herkes çözebilir mi ?)</span> </span>
-                            </label>
-                        </div>
-                        <button type="submit"
-                                class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            Anketi Oluştur
-                        </button>
-                    </form>
-                </div>
+        <hr>
+        <div class="p-4">
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Başlık</label>
+              <input type="text" id="title" name="title"
+                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                     placeholder="Başlık" required>
             </div>
+            <div class="mb-4">
+              <label for="description"
+                     class="block mb-2 text-sm font-medium text-gray-900">Açıklama</label>
+              <textarea type="text" id="description"
+                        name="description"
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                        placeholder="Açıklama"></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="tags"
+                     class="block mb-2 text-sm font-medium text-gray-900">Etiketler</label>
+              <textarea id="tags"
+                        name="tags"
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                        placeholder="Etiketler"></textarea>
+              <span
+                  class="text-xs text-gray-500">*Virgül ile ayırarak yazınız.</span>
+            </div>
+            <div class="flex items-center h-5 mb-4 space-x-2">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="hidden" name="is_active" value="off"/>
+                <input type="checkbox" value="on" name="is_active" checked class="sr-only peer">
+                <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <span class="ml-3 text-sm font-medium text-gray-900">Anket aktif mi ?</span>
+              </label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="hidden" name="is_private" value="off"/>
+                <input type="checkbox" value="on" name="is_private" class="sr-only peer">
+                <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <span class="ml-3 text-sm font-medium text-gray-900">Anket özel mi ? <span
+                    class="text-xs text-gray-500">(Herkes çözebilir mi ?)</span> </span>
+              </label>
+            </div>
+            <button type="submit"
+                    class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+              Anketi Oluştur
+            </button>
+          </form>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 {% endblock %}

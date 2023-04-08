@@ -1,11 +1,12 @@
 # from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
-from django.db.models import Q
-from apps.poll.models import Poll, PollInviteLinks, PollVote
-from django.http import HttpResponse
 
+from apps.poll.models import Poll, PollInviteLinks, PollVote
 from .models import PollResolved
 
 
@@ -28,13 +29,11 @@ def ispollready(poll, invite_link=None):
 
 
 def render_vote_html(request, template_name, poll_object):
-    return render(request, template_name,
-                  {
-                      "poll": poll_object,
-                      "questions": poll_object.pollquestion_set.order_by("id"),
-                      "cho_list": ("text", "number", "date", "email", "time")
-                  }
-                  )
+    return render(request, template_name, {
+        "poll": poll_object,
+        "questions": poll_object.pollquestion_set.order_by("id"),
+        "cho_list": ("text", "number", "date", "email", "time")
+    })
 
 
 class ListPublicPoll(ListView):
@@ -45,11 +44,15 @@ class ListPublicPoll(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["resolved_list"] = PollResolved.objects.filter(user=self.request.user).values_list("poll_id", flat=True)
+        if self.request.user.is_authenticated:
+            context["resolved_list"] = PollResolved.objects. \
+                filter(user=self.request.user).values_list("poll_id", flat=True)
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(~Q(pollresolved__user__in=[self.request.user]))
+        queryset = super().get_queryset()
+        if self.request.user.is_authenticated:
+            queryset.filter(~Q(pollresolved__user__in=[self.request.user]))
         search_value = self.request.GET.get("search")
         if search_value:
             queryset = queryset.filter(
@@ -60,7 +63,7 @@ class ListPublicPoll(ListView):
         return queryset
 
 
-class VotePublicPoll(View):
+class VotePublicPoll(LoginRequiredMixin, View):
     template_name = "public_poll/vote.html"
 
     def get(self, request, poll_slug):
