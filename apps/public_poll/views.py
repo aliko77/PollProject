@@ -52,7 +52,7 @@ class ListPublicPoll(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.is_authenticated:
-            queryset.filter(~Q(pollresolved__user__in=[self.request.user]))
+            queryset = queryset.filter(~Q(pollresolved__user__in=[self.request.user]))
         search_value = self.request.GET.get("search")
         if search_value:
             queryset = queryset.filter(

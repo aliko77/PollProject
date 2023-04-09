@@ -1,14 +1,17 @@
+import datetime
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.edit import DeleteView
 from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-import datetime
-from .models import Poll, PollQuestion, PollAnswer, PollQuestionChoices, PollInviteLinks
+from django.views.generic.edit import DeleteView
+
 from .forms import CreatePollForm, CreatePollQuestionForm, CreatePollAnswerForm
+from .models import Poll, PollQuestion, PollAnswer, PollQuestionChoices, PollInviteLinks
+from ..public_poll.models import PollResolved
 
 
 # Create your views here.
@@ -16,13 +19,13 @@ from .forms import CreatePollForm, CreatePollQuestionForm, CreatePollAnswerForm
 class ListPoll(LoginRequiredMixin, ListView):
     model = Poll
     template_name = "poll/index.html"
+    context_object_name = 'user_polls'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user_polls"] = self.model.objects.filter(
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(
             author=self.request.user
         )
-        return context
+        return queryset
 
 
 class CreatePoll(LoginRequiredMixin, View):
@@ -304,3 +307,15 @@ class DeletePollInviteLink(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse_lazy('poll.update',
                             kwargs={"pk": self.object.poll.id}
                             )
+
+
+class ListPollAnalysis(LoginRequiredMixin, ListView):
+    model = PollResolved
+    template_name = "poll/analysis/index.html"
+    context_object_name = 'poll_resolved'
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(
+            user=self.request.user
+        )
+        return queryset

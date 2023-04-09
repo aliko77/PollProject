@@ -1,9 +1,11 @@
 from django.urls import path
+
 from .views import \
     ListPoll, CreatePoll, UpdatePoll, DeletePoll, \
     CreatePollQuestion, UpdatePollQuestion, DeletePollQuestion, \
     CreatePollAnswer, UpdatePollAnswer, DeletePollAnswer, \
-    CreatePollInviteLink, DeletePollInviteLink
+    CreatePollInviteLink, DeletePollInviteLink, \
+    ListPollAnalysis
 
 urlpatterns = [
     path("index/", ListPoll.as_view(), name="poll.index"),
@@ -16,15 +18,17 @@ urlpatterns = [
     path("<int:poll_id>/question/<int:pk>/delete/", DeletePollQuestion.as_view(), name="poll.question.delete"),
     # PollAnswer
     path("<int:poll_id>/question/<int:question_id>/answer/create/", CreatePollAnswer.as_view(),
-        name="poll.answer.create"
-    ),
+         name="poll.answer.create"
+         ),
     path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/update/", UpdatePollAnswer.as_view(),
-        name="poll.answer.update"
-    ),
+         name="poll.answer.update"
+         ),
     path("<int:poll_id>/question/<int:question_id>/answer/<int:pk>/delete/", DeletePollAnswer.as_view(),
-        name="poll.answer.delete"
-    ),
+         name="poll.answer.delete"
+         ),
     # Poll Invites
     path("<int:poll_id>/invite/create/", CreatePollInviteLink.as_view(), name="poll.invite"),
-    path("<int:poll_id>/invite/<int:pk>/delete/", DeletePollInviteLink.as_view(), name="poll.invite.delete")
+    path("<int:poll_id>/invite/<int:pk>/delete/", DeletePollInviteLink.as_view(), name="poll.invite.delete"),
+    # Poll Analysis
+    path("analysis/index", ListPollAnalysis.as_view(), name="poll.analysis.index"),
 ]
